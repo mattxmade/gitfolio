@@ -1,0 +1,32 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattxmade/portfolio.git"
+  },
+  "keywords": [],
+  "author": "mattxmade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattxmade/portfolio/issues"
+  },
+  "homepage": "https://github.com/mattxmade/portfolio#readme",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.9.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^3.1.0",
+    "vite": "^4.1.4"
+  }
+}
