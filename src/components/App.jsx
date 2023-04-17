@@ -1,55 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 import content from "../content";
 import Group from "./Group";
 
 const App = () => {
+  const modalRef = useRef();
+
   const [currentProject, setCurrentProject] = useState();
 
-  const handleSelectProject = (e, selectedProject) => {
+  const handleDialogVisibility = (action) =>
+    action === "show" ? modalRef.current.showModal() : modalRef.current.close();
+
+  const handleSelectProject = (selectedProject) => {
     setCurrentProject(selectedProject);
-    modalRef.current.showModal();
+    handleDialogVisibility("show");
   };
 
   return (
     <div className="wrapper">
-      <header></header>
+      <div className="overlay">
+        <header></header>
 
-      {currentProject ? <ProjectDialog /> : null}
+        <dialog ref={modalRef}>
+          {currentProject ? (
+            <Modal
+              project={currentProject}
+              handleDialogVisibility={handleDialogVisibility}
+            />
+          ) : null}
+        </dialog>
 
-      <main>
-        <section>
-          <Group
-            projects={[...new Array(1)].map((v, i) => content.projects[i])}
-            groupName="HTML CSS JavaScript"
-            handleSelectProject={handleSelectProject}
-          />
-        </section>
+        <main>
+          <section>
+            <Group
+              id="vanilla"
+              heading="HTML CSS JavaScript"
+              projects={content.vanilla}
+              handleSelectProject={handleSelectProject}
+            />
+          </section>
 
-        <section>
-          <Group
-            projects={[...new Array(1)].map((v, i) => content.projects[i])}
-            groupName="Design briefs | Repsonsive design"
-            handleSelectProject={handleSelectProject}
-          />
-        </section>
+          <section>
+            <Group
+              id="design"
+              heading="Design briefs | Repsonsive design"
+              projects={content.briefs}
+              handleSelectProject={handleSelectProject}
+            />
+          </section>
 
-        <section>
-          <Group
-            projects={[...new Array(1)].map((v, i) => content.projects[i])}
-            handleSelectProject={handleSelectProject}
-          />
-        </section>
+          <section>
+            <Group
+              id="react"
+              heading="React"
+              projects={content.react}
+              handleSelectProject={handleSelectProject}
+            />
+          </section>
 
-        <section>
-          <Group
-            projects={[...new Array(1)].map((v, i) => content.projects[i])}
-            handleSelectProject={handleSelectProject}
-          />
-        </section>
-      </main>
+          <section>
+            <Group
+              id="threejs"
+              heading="ThreeJS"
+              projects={[...new Array(1)].map((v, i) => content.projects[i])}
+              handleSelectProject={handleSelectProject}
+            />
+          </section>
+        </main>
 
-      <footer></footer>
+        <footer></footer>
+      </div>
     </div>
   );
 };
