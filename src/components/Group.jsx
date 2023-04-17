@@ -12,7 +12,11 @@ const Group = (props) => {
       <ul className="projects">
         {props.projects.map((project, index) => (
           <li key={index} className="project-card">
-            <Project project={project} repo={props.projectsData} />
+            <Project
+              project={project}
+              repo={props.projectsData}
+              handleSelectProject={props.handleSelectProject}
+            />
           </li>
         ))}
       </ul>
