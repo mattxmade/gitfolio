@@ -57,11 +57,13 @@ const Project = (props) => {
           src={project.img.src}
           alt={project.img.alt}
         />
-        <div className="img-mask">
-          <button>
-            <i className="fa fa-solid fa-maximize" />
-          </button>
-        </div>
+        <button
+          className="img-mask"
+          onClick={() => props.handleSelectProject(project)}
+          // TODO: aria | image button
+        >
+          <i className="fa fa-solid fa-maximize" />
+        </button>
       </div>
     </Fragment>
   );
