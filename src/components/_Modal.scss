@@ -1,0 +1,93 @@
+/*===============
+  Project Modal
+=================*/
+.modal {
+  width: min(100%, 68rem);
+  position: relative;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 1rem 1rem 3rem;
+  // padding: 1rem 0 0;
+
+  border: 0.5rem solid pink;
+  background-color: white;
+}
+
+.modal {
+  h2 {
+    text-align: left;
+  }
+  p {
+    text-align: center;
+  }
+}
+
+.modal__close-button {
+  float: right;
+  margin-right: 1rem;
+}
+
+.modal__img-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  li {
+    padding: 1rem;
+    width: calc(100% / 3);
+  }
+
+  img {
+    cursor: pointer;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.modal__description,
+.project-card__description {
+  justify-self: center;
+
+  margin-bottom: 2rem;
+  padding: 0 2rem;
+}
+
+.modal__tech-icons-list,
+.project-card__tech-icons-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 2rem;
+
+  @media (max-width: 540px) {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  li {
+    margin: 0 1rem;
+    position: relative;
+  }
+}
+
+.tech-icon {
+  font-size: var(--modal-icon-size);
+  width: calc(var(--modal-icon-size) + 0.8rem);
+  height: auto;
+
+  position: relative;
+}
+
+.modal__icon-mask,
+.project-card__icon-mask {
+  top: 0;
+  left: 0;
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+}
