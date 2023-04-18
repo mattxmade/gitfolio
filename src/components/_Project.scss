@@ -1,0 +1,218 @@
+/*==============
+  Project Card
+================*/
+.project-card {
+  gap: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  padding: 1rem;
+  position: relative;
+
+  color: lightblue;
+  border: 0.1rem solid darkcyan;
+  background-color: rgb(32 27 42 / 60%);
+
+  @media (max-width: 1220px) {
+    gap: 1rem;
+    flex-direction: column;
+  }
+}
+
+.project-card-focus {
+  padding: 0.5rem;
+}
+
+// .project-card__description {
+// }
+
+.project-card__aside {
+  width: 75%;
+  width: 60%;
+
+  margin-bottom: 0.7rem;
+  height: calc(100% - 7rem);
+
+  padding: 0 1rem 0.7rem;
+
+  gap: 1.5rem;
+  display: grid;
+  position: relative;
+
+  border-radius: 0.5rem;
+  border: 0.1rem solid rgb(126 210 255 / 20%);
+
+  background: linear-gradient(
+    45deg,
+    darkslategrey,
+    rgb(38, 38, 78),
+    darkslategrey
+  );
+
+  h2 {
+    color: white;
+
+    height: fit-content;
+    width: fit-content;
+    margin: 1.2rem 1rem 1.7rem 0.2rem;
+  }
+
+  @media (max-width: 1220px) {
+    width: 100%;
+    height: auto;
+
+    gap: 0;
+    padding: 0 1rem 1.7rem;
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.project-card__content {
+  border-radius: 0.5rem;
+  border: 0.2rem solid darkcyan;
+}
+
+.project-card__feature-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 1rem;
+
+  // style class
+  padding: 0 0.5rem 0.5rem;
+
+  li {
+    width: 100%;
+
+    p {
+      padding: 0.4rem 0;
+
+      color: rgb(165, 165, 239);
+      background-color: transparent;
+    }
+  }
+
+  @media (max-width: 1220px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.project-card__image-container {
+  height: 51rem;
+  cursor: pointer;
+
+  top: -4rem;
+  position: relative;
+
+  display: grid;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  border: 0.1rem solid darkcyan;
+
+  @media (max-width: 1220px) {
+    top: 0;
+    height: auto;
+    border: none;
+  }
+}
+
+.project-card__image-container img {
+  width: 100%;
+  height: auto;
+  position: relative;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 1220px) {
+  #project-card__image-vintage {
+    transform: translate(-50%, -57%);
+    //transform: translate(-37.2rem, -36.5rem);
+  }
+  #project-card__image-knights {
+    transform: translate(-50%, -57.5%);
+  }
+  #project-card__image-battles {
+    transform: translate(-50%, -52.5%);
+  }
+  #project-card__image-landing {
+    transform: translate(-50%, -51.5%);
+  }
+  #project-card__image-dashboard {
+    transform: translate(-50%, -50%);
+  }
+  #project-card__image-arcade {
+    transform: translate(-50%, -56%);
+  }
+  #project-card__image-cvbuild {
+    transform: translate(-50%, -50%);
+  }
+  #project-card__image-wireframe {
+    transform: translate(-50%, -50%);
+  }
+}
+
+.project-card__image-container .img-mask {
+  top: 0;
+  left: 0;
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+.img-mask,
+.img-mask i.fa {
+  transition: 0.3s;
+  color: transparent;
+}
+.img-mask:hover {
+  background-color: rgb(47, 79, 79, 0.7);
+}
+.img-mask:hover i.fa {
+  color: whitesmoke;
+}
+
+.project-card__icons {
+  margin: 1rem;
+  width: fit-content;
+  padding: var(--card-padding);
+
+  gap: 2rem;
+  display: flex;
+  align-items: center;
+  justify-self: flex-end;
+  justify-content: center;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  a i.fa {
+    color: lightblue;
+  }
+
+  a:first-child i.fa {
+    font-size: 2.7rem;
+  }
+}
+
+.project-card__aside.display-block {
+  display: block;
+}
+
+.project-card__aside > ul {
+  height: fit-content;
+  margin-top: 4rem;
+}
