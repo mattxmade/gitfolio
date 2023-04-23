@@ -155,12 +155,19 @@ const directory = {
       items: {
         description: "List of directory submodules",
         type: "object",
-        item: { schema: { file, directory: this.directory } },
+        item: {
+          schema: {
+            file: file,
+            directory: {},
+          },
+        },
       },
     },
   },
   numOfProps: 5,
 };
+
+directory.properites.contents.items.item.schema.directory = directory;
 
 // Repo contents has list of files and or directories
 const gitRepo = {
@@ -181,19 +188,19 @@ const gitRepo = {
       items: {
         description: "List of repository submodules",
         type: "object",
-        item: { schema: { file, directory: this.directory } },
+        item: {
+          schema: { file, directory },
+        },
       },
     },
   },
   numOfProps: 2,
 };
 
-const gitRepoSchema = {
+exports.gitRepoSchema = {
   gitRepo,
   directory,
   file,
   commit,
   patch,
 };
-
-export default gitRepoSchema;
