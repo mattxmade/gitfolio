@@ -20,6 +20,17 @@ const requestConfig = {
 
 const { ignoreList } = ownerConfig;
 
+// API call to get file contents | url is a property from file object
+const getFileContents = async (url) => {
+  try {
+    const source = await octokit.request(`GET ${url}`, { headers });
+    return source.data;
+  } catch (error) {
+    console.log("File download error >> " + error);
+    return "File download failed";
+  }
+};
+
 // Filter dir(s)/file(s) that are not required | examples >> dir: media, assets | extenstions: .jpg, .webp
 const contentFilter = (array) =>
   array.filter((item) => {
@@ -30,8 +41,22 @@ const contentFilter = (array) =>
   });
 
 // Unpack repository | process content
-const unpackRepoContent = (arrayToUnpack) =>
-  contentFilter(arrayToUnpack).map((submodule) => submodule);
+const unpackRepoContent = async (arrayToUnpack) =>
+  contentFilter(arrayToUnpack).map(async (item) => {
+    if (item.type === "file" || item.type === "submodule") {
+      console.log("Filename: " + item.name);
+
+      const download = await getFileContents(item.download_url);
+      item.download = download;
+
+      console.log(item.download);
+      return item;
+    }
+
+    if (item.type === "dir") {
+      console.log("Directory: " + item.name);
+    }
+  });
 
 const handleRepoContentRequest = async (req, res, next) => {
   let response = { status: "string", message: "string" };
@@ -41,8 +66,8 @@ const handleRepoContentRequest = async (req, res, next) => {
     const repoContent = await octokit.rest.repos.getContent(requestConfig);
 
     // Unpack and process data
-    const contents = unpackRepoContent(repoContent.data);
-    console.log(contents);
+    const contents = await unpackRepoContent(repoContent.data);
+    // console.log(contents);
 
     // Returns 200 | Set success message
     response.status = repoContent.status;
@@ -54,7 +79,9 @@ const handleRepoContentRequest = async (req, res, next) => {
   }
 
   // Remaining requests after calling API
-  console.log((await octokit.request("GET /rate_limit", rateLimitConfig)).data);
+  console.log(
+    (await octokit.request("GET /rate_limit", rateLimitConfig)).data.rate
+  );
 
   // return response
   res.status(response.status).send(response);
