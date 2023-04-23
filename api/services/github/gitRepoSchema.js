@@ -167,6 +167,7 @@ const directory = {
   numOfProps: 5,
 };
 
+// Directories can contain other directories
 directory.properites.contents.items.item.schema.directory = directory;
 
 // Repo contents has list of files and or directories
