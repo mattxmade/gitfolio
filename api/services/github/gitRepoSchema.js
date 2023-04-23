@@ -102,7 +102,7 @@ const file = {
       type: "number",
     },
     type: {
-      description: "Submodule type",
+      description: "Item type",
       type: "string",
     },
     commits: {
@@ -126,8 +126,8 @@ const file = {
 
 // Directory has list of files and or directories
 const directory = {
-  title: "Directory submodule item",
-  description: "Directory submodule",
+  title: "Directory",
+  description: "Directory item",
   type: "array",
 
   properites: {
@@ -144,7 +144,7 @@ const directory = {
       type: "number",
     },
     type: {
-      description: "Submodule type",
+      description: "Item type",
       type: "string",
     },
     contents: {
@@ -153,7 +153,7 @@ const directory = {
       minItems: 0,
 
       items: {
-        description: "List of directory submodules",
+        description: "List of items belonging to directory",
         type: "object",
         item: {
           schema: {
@@ -187,7 +187,7 @@ const gitRepo = {
       minItems: 0,
 
       items: {
-        description: "List of repository submodules",
+        description: "List of repository items",
         type: "object",
         item: {
           schema: { file, directory },
