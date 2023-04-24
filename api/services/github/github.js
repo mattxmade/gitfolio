@@ -20,7 +20,25 @@ const requestConfig = {
 
 const { ignoreList } = ownerConfig;
 
-// API call to get file contents | url is a property from file object
+// API request to get file contents | path to directory : name of repository
+const getDirectoryContents = async (path, repo) => {
+  try {
+    const contents = await octokit.rest.repos.getContent({
+      path,
+      repo,
+      headers,
+      owner: ownerConfig.owner,
+    });
+
+    // Only want data
+    return contents.data;
+  } catch (error) {
+    console.log("Error getting subdirectory >> " + error);
+    return "Failed: Directory contents";
+  }
+};
+
+// API request to get file contents | url is a property from file object
 const getFileContents = async (url) => {
   try {
     const source = await octokit.request(`GET ${url}`, { headers });
@@ -41,20 +59,31 @@ const contentFilter = (array) =>
   });
 
 // Unpack repository | process content
-const unpackRepoContent = async (arrayToUnpack) =>
+const unpackRepoContent = async (arrayToUnpack, repoName) =>
   contentFilter(arrayToUnpack).map(async (item) => {
     if (item.type === "file" || item.type === "submodule") {
-      console.log("Filename: " + item.name);
+      // console.log("Filename: " + item.name);
 
+      // Get file contents | TODO: Handle catch
       const download = await getFileContents(item.download_url);
-      item.download = download;
 
-      console.log(item.download);
+      item.download = download;
       return item;
     }
 
     if (item.type === "dir") {
-      console.log("Directory: " + item.name);
+      // console.log("Directory: " + item.name);
+
+      // Get contents from current directory | TODO: Handle catch
+      const subdirectory = await getDirectoryContents(item.path, repoName);
+
+      // Resolve all Promises from recursive fn call
+      const contents = await Promise.all([
+        ...(await unpackRepoContent(subdirectory, repoName)),
+      ]);
+
+      item.contents = contents;
+      return item;
     }
   });
 
@@ -65,9 +94,18 @@ const handleRepoContentRequest = async (req, res, next) => {
     // Make a request to GitHub API | GET repository content
     const repoContent = await octokit.rest.repos.getContent(requestConfig);
 
-    // Unpack and process data
-    const contents = await unpackRepoContent(repoContent.data);
-    // console.log(contents);
+    // Unpack and process data | Resolve all Promises, await responses
+    const contents = await Promise.all([
+      ...(await unpackRepoContent(repoContent.data, requestConfig.repo)),
+    ]);
+
+    // Construct new repository object
+    const newRepo = {
+      contents,
+      name: requestConfig.repo,
+    };
+
+    console.log(newRepo);
 
     // Returns 200 | Set success message
     response.status = repoContent.status;
