@@ -49,6 +49,25 @@ const getFileContents = async (url) => {
   }
 };
 
+// Iterate over contents and return new item in place following schema
+const editItemProperties = (contentsArray) =>
+  contentsArray.map((item) => {
+    // New item based schema | directory OR file
+    const itemSchema = {
+      ...(item.type === "dir"
+        ? ownerConfig.schema.directory.properites
+        : ownerConfig.schema.file.properites),
+    };
+
+    // If property exists, replace placeholder value with item value
+    for (const [key, value] of Object.entries(item)) {
+      if (itemSchema[key]) itemSchema[key] = value;
+    }
+
+    // Return new item with only essential properties
+    return itemSchema;
+  });
+
 // Filter dir(s)/file(s) that are not required | examples >> dir: media, assets | extenstions: .jpg, .webp
 const contentFilter = (array) =>
   array.filter((item) => {
@@ -82,32 +101,31 @@ const unpackRepoContent = async (arrayToUnpack, repoName) =>
         ...(await unpackRepoContent(subdirectory, repoName)),
       ]);
 
-      item.contents = contents;
+      item.contents = editItemProperties(contents);
       return item;
     }
   });
 
 const handleRepoContentRequest = async (req, res, next) => {
-  let response = { status: "string", message: "string" };
+  let response = { status: 404, message: "string" };
 
   try {
-    // Make a request to GitHub API | GET repository content
+    // Make a request to GitHub API | GET repository content | array
     const repoContent = await octokit.rest.repos.getContent(requestConfig);
 
-    // Unpack and process data | Resolve all Promises, await responses
+    // Unpack and process data | Resolve all Promises, await responses | array
     const contents = await Promise.all([
       ...(await unpackRepoContent(repoContent.data, requestConfig.repo)),
     ]);
 
     // Construct new repository object
     const newRepo = {
-      contents,
       name: requestConfig.repo,
+      contents: editItemProperties(contents),
     };
 
-    console.log(newRepo);
-
     // Returns 200 | Set success message
+    response.data = newRepo;
     response.status = repoContent.status;
     response.message = "Repository contents fetched successfully";
   } catch (error) {
