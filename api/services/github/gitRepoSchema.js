@@ -82,6 +82,31 @@ const commit = {
   numOfProps: 4,
 };
 
+// shared properties | file : directory
+const core = {
+  title: "Core properties",
+  description: "Properties belonging to directories and files",
+
+  properites: {
+    name: {
+      description: "Name of item",
+      type: "string",
+    },
+    path: {
+      description: "Item path",
+      type: "string",
+    },
+    size: {
+      description: "Item size",
+      type: "number",
+    },
+    type: {
+      description: "Item type",
+      type: "string",
+    },
+  },
+};
+
 // File has list of commit objects
 const file = {
   title: "File",
@@ -89,22 +114,11 @@ const file = {
   type: "object",
 
   properites: {
-    name: {
-      description: "Name of file",
-      type: "string",
-    },
-    path: {
-      description: "File path",
-      type: "string",
-    },
-    size: {
-      description: "File size",
-      type: "number",
-    },
-    type: {
-      description: "Item type",
-      type: "string",
-    },
+    name: core.properites.name,
+    path: core.properites.path,
+    size: core.properites.size,
+    type: core.properites.type,
+
     commits: {
       description: "File commit history",
       type: "array",
@@ -131,22 +145,11 @@ const directory = {
   type: "array",
 
   properites: {
-    name: {
-      description: "Name of directory",
-      type: "string",
-    },
-    path: {
-      description: "Directory path",
-      type: "string",
-    },
-    size: {
-      description: "Directory size",
-      type: "number",
-    },
-    type: {
-      description: "Item type",
-      type: "string",
-    },
+    name: core.properites.name,
+    path: core.properites.path,
+    size: core.properites.size,
+    type: core.properites.type,
+
     contents: {
       description: "Contents of directory",
       type: "array",
@@ -200,6 +203,7 @@ const gitRepo = {
 
 exports.gitRepoSchema = {
   gitRepo,
+  core,
   directory,
   file,
   commit,
