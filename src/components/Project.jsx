@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
 
 import Icon from "./core/Icon";
-import nameTag from "../ui/nameTag.module";
+import nameTag from "../ui/nameTag";
 
 const Project = (props) => {
   const project = props.project;
