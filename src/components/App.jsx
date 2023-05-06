@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
 
-import content from "../content";
+import Modal from "./Modal";
 import Group from "./Group";
+
+import content from "../content";
 
 const App = () => {
   const modalRef = useRef();
