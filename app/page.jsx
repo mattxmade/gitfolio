@@ -1,11 +1,15 @@
+"use client";
+
+export const revalidate = 0;
+
 import React, { useState, useRef } from "react";
 
-import Modal from "./Modal";
-import Group from "./Group";
+import Modal from "./components/Modal";
+import Group from "./components/Group";
 
-import content from "../content";
+import content from "./data/content";
 
-const App = () => {
+export default function Home() {
   const modalRef = useRef();
 
   const [currentProject, setCurrentProject] = useState();
@@ -74,6 +78,4 @@ const App = () => {
       </div>
     </div>
   );
-};
-
-export default App;
+}
