@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { Fragment, useEffect, useState, useRef } from "react";
 
 import Icon from "./core/Icon";
@@ -52,7 +53,7 @@ const Project = (props) => {
       </aside>
 
       <div className="project-card__image-container">
-        <img
+        <Image
           id={`project-card__image-${project.id}`}
           src={project.img.src}
           alt={project.img.alt}

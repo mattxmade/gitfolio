@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 import Icon from "./core/Icon";
@@ -19,7 +20,7 @@ const Modal = ({ project, handleDialogVisibility }) => {
       <ul className="modal__img-list">
         {[...new Array(3)].map((v, i) => (
           <li key={"project-image_" + i}>
-            <img src={project?.img.src} alt="" />
+            <Image src={project?.img.src} alt="" />
           </li>
         ))}
       </ul>
