@@ -1,13 +1,18 @@
+@use "./ui/nameTag";
+@use "./components/Modal";
+
+@use "./components/Project";
+
 /*=======
   Fonts
 =========*/
 @font-face {
   font-family: "Play";
-  src: url("./fonts/Play-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/Play-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "Chakra Petch";
-  src: url("./fonts/ChakraPetch-SemiBold.ttf") format("truetype");
+  src: url("./assets/fonts/ChakraPetch-SemiBold.ttf") format("truetype");
 }
 
 *,
@@ -18,7 +23,148 @@
   box-sizing: border-box;
 }
 
+:root {
+  --card-padding: 1rem;
+  --modal-icon-size: 2.8rem;
+}
+
 html {
   font-size: 62.5%;
   min-height: 100vh;
+}
+
+body {
+  font-size: 1.6rem;
+  max-width: 2000px;
+
+  background: linear-gradient(45deg, red, blue, red, blue, red);
+}
+
+#root {
+  background: url("./assets/svg/honeycomb_v1.svg");
+  background-size: contain;
+
+  svg {
+    fill: pink;
+  }
+}
+
+h1 {
+  font-size: 3rem;
+  font-family: "Chakra Petch", sans-serif;
+}
+
+h3 {
+  margin-bottom: 1rem;
+}
+
+h2,
+h3 {
+  text-align: center;
+  padding: calc(var(--card-padding) / 2);
+}
+
+h2,
+h3 {
+  font-size: 2rem; // 2.2rem
+
+  @media (max-width: 540px) {
+    text-align: left;
+    font-size: 1.8rem;
+
+    margin-bottom: 1rem;
+  }
+}
+
+p {
+  font-size: 1.6rem;
+  text-align: center;
+
+  @media (max-width: 540px) {
+    font-size: 1.4rem;
+  }
+}
+
+p,
+h2,
+h3,
+h4 {
+  font-family: "Play", sans-serif;
+}
+
+a,
+a::before,
+a::after {
+  color: black;
+  color: lightgrey;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+i.fa {
+  font-size: 2.8rem;
+}
+
+.wrapper {
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgb(60 60 60 / 65%);
+}
+
+.overlay {
+  background: linear-gradient(rgba(0, 0, 0, 0.51) 98%, transparent);
+}
+
+main {
+  flex: auto;
+  display: grid;
+  justify-content: center;
+
+  margin: 1rem 0;
+  padding: 0 7rem;
+  padding: 0 2rem;
+
+  @media (max-width: 860px) {
+    padding: 0 3rem;
+  }
+}
+
+section {
+  margin: 1rem 0 3rem;
+}
+
+section h2 {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+footer {
+  width: 100%;
+  padding: 3rem;
+}
+
+/*=======
+  Modal
+========*/
+dialog {
+  width: 100%;
+  height: 100%;
+
+  margin: auto;
+  overflow: hidden;
+
+  outline: none;
+  border: none;
+  background-color: transparent;
 }
