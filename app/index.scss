@@ -168,3 +168,19 @@ dialog {
   border: none;
   background-color: transparent;
 }
+
+/*================
+  Projects Group
+=================*/
+.projects {
+  gap: 9rem;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: 1fr;
+
+  max-width: 125rem;
+
+  @media (max-width: 1220px) {
+    gap: 5rem;
+  }
+}
