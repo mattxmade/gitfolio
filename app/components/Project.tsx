@@ -9,8 +9,13 @@ import Icon from "./core/Icon";
 import Button from "./widgets/Button";
 import NameTag from "./widgets/NameTag";
 
-const Project = (props) => {
-  const project = props.project;
+// Application Types
+import { IProject } from "../types/application";
+
+type Props = { project: IProject };
+
+const Project = ({ project }: React.PropsWithChildren<Props>) => {
+  if (!project) return;
 
   return (
     <Fragment>
