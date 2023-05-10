@@ -1,8 +1,13 @@
-import Image from "next/image";
-import React, { Fragment, useEffect, useState, useRef } from "react";
+import React, { Fragment } from "react";
 
+// next Components
+import Link from "next/link";
+import Image from "next/image";
+
+// Custom Components
 import Icon from "./core/Icon";
-import nameTag from "../ui/nameTag";
+import Button from "./widgets/Button";
+import NameTag from "./widgets/NameTag";
 
 const Project = (props) => {
   const project = props.project;
@@ -32,11 +37,7 @@ const Project = (props) => {
             {project.tech.map((name, i) => (
               <li key={"project-tech_" + i}>
                 <Icon name={name} />
-                <div
-                  className="project-card__icon-mask"
-                  onMouseOver={(e) => nameTag.create(name, e)}
-                  onMouseLeave={(e) => nameTag.remove()}
-                />
+                <NameTag name={name} className="project-card__icon-mask" />
               </li>
             ))}
           </ul>
@@ -53,21 +54,33 @@ const Project = (props) => {
       </aside>
 
       <div className="project-card__image-container">
+        {/* <Link href={`/projects/${project.title}`}> */}
         <Image
+          priority // [1]
           id={`project-card__image-${project.id}`}
           src={project.img.src}
           alt={project.img.alt}
         />
-        <button
-          className="img-mask"
-          onClick={() => props.handleSelectProject(project)}
-          // TODO: aria | image button
-        >
+        <Button project={project} className="img-mask">
           <i className="fa fa-solid fa-maximize" />
-        </button>
+        </Button>
+        {/* </Link> */}
       </div>
     </Fragment>
   );
 };
 
 export default Project;
+
+/**
+ * -----------------------------------------------------------------------------
+ * [1] Priority : Largest Contentful Paint (LCP)
+ * -----------------------------------------------------------------------------
+ *
+ * Issue:
+ * Solution: add priority prop to next Image
+ *
+ * Info: https://nextjs.org/docs/pages/api-reference/components/image#priority
+ *
+ * =============================================================================
+ */
