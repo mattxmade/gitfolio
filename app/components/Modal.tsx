@@ -1,18 +1,28 @@
+// Dependencies
 import Image from "next/image";
-import React from "react";
+import React, { Fragment } from "react";
 
+// Custom Components
 import Icon from "./core/Icon";
-import nameTag from "../ui/nameTag";
+import Button from "./widgets/Button";
+import NameTag from "./widgets/NameTag";
 
-const Modal = ({ project, handleDialogVisibility }) => {
+// Application types
+import { IProject } from "../types/application";
+
+type Props = {
+  project: IProject;
+  chidren?: React.ReactNode;
+};
+
+const Modal = ({ project }: Props) => {
+  if (!project) return <Fragment />;
+
   return (
     <div className="modal">
-      <button
-        className="modal__close-button"
-        onClick={() => handleDialogVisibility("close")}
-      >
+      <Button project={project} className="modal__close-button">
         <i className="fa fa-solid fa-circle-xmark" />
-      </button>
+      </Button>
 
       <h2>+ {project?.title}</h2>
 
@@ -33,11 +43,7 @@ const Modal = ({ project, handleDialogVisibility }) => {
         {project?.tech.map((name, i) => (
           <li key={"project-tech_" + i}>
             <Icon name={name} />
-            <div
-              className="modal__icon-mask"
-              onMouseOver={(e) => nameTag.create(name, e)}
-              onMouseLeave={(e) => nameTag.remove()}
-            />
+            <NameTag name={name} className="modal__icon-mask" />
           </li>
         ))}
       </ul>
