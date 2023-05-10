@@ -1,9 +1,14 @@
-import React from "react";
+import React, { Fragment } from "react";
+
+type Props = {
+  name: string;
+  children?: React.ReactNode;
+};
 
 import Svg from "./Svg";
 const { WebpackIcon } = Svg;
 
-const Icon = (props) => {
+const Icon = (props: Props) => {
   switch (props.name) {
     case "HTML":
       return <i className="tech-icon fa-brands fa-html5" />;
@@ -21,6 +26,8 @@ const Icon = (props) => {
           <WebpackIcon />
         </i>
       );
+    default:
+      return <Fragment />;
   }
 };
 
