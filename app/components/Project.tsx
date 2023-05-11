@@ -15,7 +15,7 @@ import { IProject } from "../types/application";
 type Props = { project: IProject };
 
 const Project = ({ project }: React.PropsWithChildren<Props>) => {
-  if (!project) return;
+  if (!project) return <Fragment />;
 
   return (
     <Fragment>
