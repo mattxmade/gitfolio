@@ -1,10 +1,12 @@
 "use client";
 import React, { useContext } from "react";
 
+import { IProject } from "@/app/types/application";
 import { ProjectContext } from "@/app/utils/Contexts";
 
 type Props = {
-  project: any;
+  project: IProject;
+  children: React.ReactNode;
 } & React.HTMLAttributes<HTMLButtonElement>;
 
 // ts 2769
