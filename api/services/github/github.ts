@@ -1,5 +1,11 @@
+// Dependencies
+import "server-only";
 import { Octokit } from "octokit";
+
 import { ownerConfig } from "./ownerConfig";
+
+// types
+import { DirectoryItem } from "./types";
 
 // Authenticate API access using Octokit
 const octokit = new Octokit({ auth: process.env.TKN });
@@ -17,8 +23,6 @@ const requestConfig = {
   owner: ownerConfig.owner,
   repo: ownerConfig.repo,
 };
-
-const { ignore } = ownerConfig;
 
 // API request to get file contents | path to directory : name of repository
 const getDirectoryContents = async (path: string, repo: string) => {
@@ -49,30 +53,21 @@ const getFileContents = async (url: string) => {
   }
 };
 
+const { omit } = ownerConfig;
+
 // Iterate over contents and return new item in place following schema
-const editItemProperties = (contents: Array<any>) =>
-  contents.map((item) => {
-    // New item based schema | directory OR file
-    const itemSchema = {
-      ...(item.type === "dir"
-        ? ownerConfig.schema.directory.properites
-        : ownerConfig.schema.file.properites),
-    };
+const editItemProperties = (contents: DirectoryItem[]) =>
+  contents.map((item: DirectoryItem) => {
+    omit.properties.forEach((prop) => item[prop] && delete item[prop]);
 
-    // If property exists, replace placeholder value with item value
-
-    // TODO: Add index property to type defintion
-    // for (const [key, value] of Object.entries(item)) {
-    //   if (itemSchema[key as any]) itemSchema[key] = value;
-    // }
-
-    // Return new item with only essential properties
-    return itemSchema;
+    return item;
   });
 
+const { ignore } = ownerConfig;
+
 // Filter dir(s)/file(s) that are not required | examples >> dir: media, assets | extenstions: .jpg, .webp
-const contentsFilter = (contents: Array<any>) =>
-  contents.filter((item) => {
+const contentsFilter = (contents: DirectoryItem[]) =>
+  contents.filter((item: DirectoryItem) => {
     if (ignore.directories.includes(item.name)) return;
     if (ignore.extensions.some((ext: string) => item.name.includes(ext)))
       return;
@@ -81,10 +76,10 @@ const contentsFilter = (contents: Array<any>) =>
   });
 
 // Unpack repository | process content
-const unpackRepoContent = async (data: Array<any>, repoName: string) =>
-  contentsFilter(data).map(async (item) => {
+const unpackRepoContent = async (data: DirectoryItem[], repoName: string) =>
+  contentsFilter([...data]).map(async (item: DirectoryItem) => {
     if (item.type === "file" || item.type === "submodule") {
-      // console.log("Filename: " + item.name);
+      if (!item.download_url) return item;
 
       // Get file contents | TODO: Handle catch
       const download = await getFileContents(item.download_url);
@@ -94,51 +89,71 @@ const unpackRepoContent = async (data: Array<any>, repoName: string) =>
     }
 
     if (item.type === "dir") {
-      // console.log("Directory: " + item.name);
-
       // Get contents from current directory | TODO: Handle catch
-      const subdirectory = await getDirectoryContents(item.path, repoName);
+      const subdirectory = (await getDirectoryContents(
+        item.path,
+        repoName
+      )) as DirectoryItem[];
 
       // Resolve all Promises from recursive fn call
-      const contents = await Promise.all([
-        ...(await unpackRepoContent(subdirectory as any, repoName)),
-      ]);
+      const contents = (await Promise.all([
+        ...(await unpackRepoContent(subdirectory, repoName)),
+      ])) as DirectoryItem[];
 
       item.contents = editItemProperties(contents);
       return item;
     }
   });
 
+// Content Request Type Definition
+type IContentRequest = {
+  owner: string;
+  repo: string;
+  path: string;
+  headers: { accept: string; "X-GitHub-Api-Version": string };
+};
+
 const handleRepoContentRequest = async (req: Request) => {
+  // TODO: handle request
+
   const response = {} as {
     status: number;
     message: string;
     data: object | Array<object>;
   };
 
+  const reqRootContents = {
+    headers,
+    path: "",
+    repo: ownerConfig.repo,
+    owner: ownerConfig.owner,
+  } as IContentRequest;
+
   try {
     // Make a request to GitHub API | GET repository content | array
-    const repoContent = await octokit.rest.repos.getContent(
+    const rootContents = await octokit.rest.repos.getContent(
       requestConfig as any
     );
 
     // Unpack and process data | Resolve all Promises, await responses | array
-    const contents = await Promise.all([
-      ...(await unpackRepoContent(
-        repoContent.data as any,
-        requestConfig.repo as any
-      )),
-    ]);
+    const contents = Array.isArray(rootContents.data)
+      ? await Promise.all([
+          ...((await unpackRepoContent(
+            rootContents.data,
+            reqRootContents.repo
+          )) as Promise<DirectoryItem>[]),
+        ])
+      : [];
 
     // Construct new repository object
     const newRepo = {
-      name: requestConfig.repo,
-      contents: editItemProperties(contents),
+      name: reqRootContents.repo,
+      contents: contents ? editItemProperties(contents) : contents,
     };
 
     // Returns 200 | Set success message
     response.data = newRepo;
-    response.status = repoContent.status;
+    response.status = rootContents.status;
     response.message = "Repository contents fetched successfully";
   } catch (error: any) {
     // returns 404 : Not Found | REASON > No access || Repo not found || Incorrect credentials
