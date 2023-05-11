@@ -1,5 +1,5 @@
-const { Octokit } = require("octokit");
-const { ownerConfig } = require("./ownerConfig");
+import { Octokit } from "octokit";
+import { ownerConfig } from "./ownerConfig";
 
 // Authenticate API access using Octokit
 const octokit = new Octokit({ auth: process.env.TKN });
@@ -18,16 +18,16 @@ const requestConfig = {
   repo: ownerConfig.repo,
 };
 
-const { ignoreList } = ownerConfig;
+const { ignore } = ownerConfig;
 
 // API request to get file contents | path to directory : name of repository
-const getDirectoryContents = async (path, repo) => {
+const getDirectoryContents = async (path: string, repo: string) => {
   try {
     const contents = await octokit.rest.repos.getContent({
       path,
       repo,
       headers,
-      owner: ownerConfig.owner,
+      owner: ownerConfig.owner as string,
     });
 
     // Only want data
@@ -39,7 +39,7 @@ const getDirectoryContents = async (path, repo) => {
 };
 
 // API request to get file contents | url is a property from file object
-const getFileContents = async (url) => {
+const getFileContents = async (url: string) => {
   try {
     const source = await octokit.request(`GET ${url}`, { headers });
     return source.data;
@@ -50,8 +50,8 @@ const getFileContents = async (url) => {
 };
 
 // Iterate over contents and return new item in place following schema
-const editItemProperties = (contentsArray) =>
-  contentsArray.map((item) => {
+const editItemProperties = (contents: Array<any>) =>
+  contents.map((item) => {
     // New item based schema | directory OR file
     const itemSchema = {
       ...(item.type === "dir"
@@ -60,26 +60,29 @@ const editItemProperties = (contentsArray) =>
     };
 
     // If property exists, replace placeholder value with item value
-    for (const [key, value] of Object.entries(item)) {
-      if (itemSchema[key]) itemSchema[key] = value;
-    }
+
+    // TODO: Add index property to type defintion
+    // for (const [key, value] of Object.entries(item)) {
+    //   if (itemSchema[key as any]) itemSchema[key] = value;
+    // }
 
     // Return new item with only essential properties
     return itemSchema;
   });
 
 // Filter dir(s)/file(s) that are not required | examples >> dir: media, assets | extenstions: .jpg, .webp
-const contentFilter = (array) =>
-  array.filter((item) => {
-    if (ignoreList.directories.includes(item.name)) return;
-    if (ignoreList.extensions.some((ext) => item.name.includes(ext))) return;
+const contentsFilter = (contents: Array<any>) =>
+  contents.filter((item) => {
+    if (ignore.directories.includes(item.name)) return;
+    if (ignore.extensions.some((ext: string) => item.name.includes(ext)))
+      return;
 
     return item;
   });
 
 // Unpack repository | process content
-const unpackRepoContent = async (arrayToUnpack, repoName) =>
-  contentFilter(arrayToUnpack).map(async (item) => {
+const unpackRepoContent = async (data: Array<any>, repoName: string) =>
+  contentsFilter(data).map(async (item) => {
     if (item.type === "file" || item.type === "submodule") {
       // console.log("Filename: " + item.name);
 
@@ -98,7 +101,7 @@ const unpackRepoContent = async (arrayToUnpack, repoName) =>
 
       // Resolve all Promises from recursive fn call
       const contents = await Promise.all([
-        ...(await unpackRepoContent(subdirectory, repoName)),
+        ...(await unpackRepoContent(subdirectory as any, repoName)),
       ]);
 
       item.contents = editItemProperties(contents);
@@ -106,16 +109,25 @@ const unpackRepoContent = async (arrayToUnpack, repoName) =>
     }
   });
 
-const handleRepoContentRequest = async (req, res, next) => {
-  let response = { status: 404, message: "string" };
+const handleRepoContentRequest = async (req: Request) => {
+  const response = {} as {
+    status: number;
+    message: string;
+    data: object | Array<object>;
+  };
 
   try {
     // Make a request to GitHub API | GET repository content | array
-    const repoContent = await octokit.rest.repos.getContent(requestConfig);
+    const repoContent = await octokit.rest.repos.getContent(
+      requestConfig as any
+    );
 
     // Unpack and process data | Resolve all Promises, await responses | array
     const contents = await Promise.all([
-      ...(await unpackRepoContent(repoContent.data, requestConfig.repo)),
+      ...(await unpackRepoContent(
+        repoContent.data as any,
+        requestConfig.repo as any
+      )),
     ]);
 
     // Construct new repository object
@@ -128,7 +140,7 @@ const handleRepoContentRequest = async (req, res, next) => {
     response.data = newRepo;
     response.status = repoContent.status;
     response.message = "Repository contents fetched successfully";
-  } catch (error) {
+  } catch (error: any) {
     // returns 404 : Not Found | REASON > No access || Repo not found || Incorrect credentials
     response.status = error.status;
     response.message = error.response.data.message;
@@ -140,7 +152,13 @@ const handleRepoContentRequest = async (req, res, next) => {
   );
 
   // return response
-  res.status(response.status).send(response);
+  // return response
+  return new Response(JSON.stringify(response), {
+    status: response.status,
+    headers: {
+      "content-type": "application/json",
+    },
+  });
 };
 
 const github = { handleRepoContentRequest };
