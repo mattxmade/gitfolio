@@ -60,8 +60,8 @@ const editItemProperties = (contents: DirectoryItem[]) =>
   contents.map((item: DirectoryItem) => {
     omit.properties.forEach((prop) => item[prop] && delete item[prop]);
 
-    return item;
-  });
+    return item as DirectoryItem | Partial<DirectoryItem>;
+  }) as Array<DirectoryItem | Partial<DirectoryItem>>;
 
 const { ignore } = ownerConfig;
 
@@ -113,7 +113,7 @@ type IContentRequest = {
   headers: { accept: string; "X-GitHub-Api-Version": string };
 };
 
-const handleRepoContentRequest = async (req: Request) => {
+const handleRepoContentRequest = async (req: string) => {
   // TODO: handle request
 
   const response = {} as {
@@ -125,15 +125,13 @@ const handleRepoContentRequest = async (req: Request) => {
   const reqRootContents = {
     headers,
     path: "",
-    repo: ownerConfig.repo,
+    repo: req ?? ownerConfig.repo,
     owner: ownerConfig.owner,
   } as IContentRequest;
 
   try {
     // Make a request to GitHub API | GET repository content | array
-    const rootContents = await octokit.rest.repos.getContent(
-      requestConfig as any
-    );
+    const rootContents = await octokit.rest.repos.getContent(reqRootContents);
 
     // Unpack and process data | Resolve all Promises, await responses | array
     const contents = Array.isArray(rootContents.data)
@@ -167,7 +165,6 @@ const handleRepoContentRequest = async (req: Request) => {
   );
 
   // return response
-  // return response
   return new Response(JSON.stringify(response), {
     status: response.status,
     headers: {
@@ -178,4 +175,4 @@ const handleRepoContentRequest = async (req: Request) => {
 
 const github = { handleRepoContentRequest };
 
-module.exports = github;
+export default github;
