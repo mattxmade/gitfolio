@@ -3,13 +3,13 @@
 import React, { useState, useRef } from "react";
 
 import Modal from "./components/Modal";
-import Group from "./components/Group";
-
 import { ProjectContext, IProjectContextProvider } from "./utils/Contexts";
 
-import content from "./data/content";
+type Props = {
+  children: React.ReactNode;
+};
 
-const Main = () => {
+const Main = (props: Props) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,37 +28,12 @@ const Main = () => {
         {currentProject ? <Modal project={currentProject} /> : null}
       </dialog>
 
-      <main>
-        <section>
-          <Group
-            id="vanilla"
-            heading="HTML CSS JavaScript"
-            projects={content.vanilla}
-          />
-        </section>
-
-        <section>
-          <Group
-            id="design"
-            heading="Design briefs | Repsonsive design"
-            projects={content.briefs}
-          />
-        </section>
-
-        <section>
-          <Group id="react" heading="React" projects={content.react} />
-        </section>
-
-        <section>
-          <Group
-            id="threejs"
-            heading="ThreeJS"
-            projects={[...new Array(1)].map((v, i) => content.projects[i])}
-          />
-        </section>
-      </main>
+      <main>{props.children}</main>
     </ProjectContext.Provider>
   );
 };
 
 export default Main;
+
+// Pass Server components as children | this "hole" will be filled by RSC when RCC has rendered client side
+// https://nextjs.org/docs/getting-started/react-essentials#recommended-pattern-passing-server-components-to-client-components-as-props
