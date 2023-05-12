@@ -2,6 +2,7 @@ import { StaticImageData } from "next/image";
 
 export type IProject = {
   id?: string;
+  repo?: string;
   title: string;
   tech: Array<string>;
   description: string;
