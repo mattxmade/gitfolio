@@ -1,3 +1,5 @@
+// server component
+
 // Dependencies
 import React, { Fragment } from "react";
 
@@ -11,7 +13,6 @@ type Props = {
   id: string;
   heading: string;
   projects: Array<IProject>;
-  repo: any;
 };
 
 const Group = (props: React.PropsWithChildren<Props>) => {
@@ -24,10 +25,7 @@ const Group = (props: React.PropsWithChildren<Props>) => {
       <ul className="projects">
         {props.projects.map((project, index) => (
           <li key={index} className="project-card">
-            <Project
-              project={project}
-              // repo={props.projectsData}
-            />
+            <Project project={project} />
           </li>
         ))}
       </ul>
