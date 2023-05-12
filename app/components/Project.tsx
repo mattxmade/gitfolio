@@ -1,3 +1,5 @@
+// server component
+
 import React, { Fragment } from "react";
 
 // next Components
@@ -8,6 +10,8 @@ import Image from "next/image";
 import Icon from "./core/Icon";
 import Button from "./widgets/Button";
 import NameTag from "./widgets/NameTag";
+import FolderBtn from "./Project/FolderBtn";
+import Repository from "./Git/Repository";
 
 // Application Types
 import { IProject } from "../types/application";
@@ -19,6 +23,9 @@ const Project = ({ project }: React.PropsWithChildren<Props>) => {
 
   return (
     <Fragment>
+      {/* @ts-expect-error [2]*/}
+      <Repository repoName={project.repo} />
+
       <aside className="project-card__aside">
         <h2>{project.title}</h2>
 
@@ -49,12 +56,13 @@ const Project = ({ project }: React.PropsWithChildren<Props>) => {
         </div>
 
         <div className="project-card__icons project-card-focus">
-          <a href={project.url.live} target="_blank">
+          <a href={project.url.live} target="_blank" rel="noreferrer">
             <i className="fa fa-solid fa-globe" />
           </a>
-          <a href={project.url.github} target="_blank">
+          <a href={project.url.github} target="_blank" rel="noreferrer">
             <i className="fa fa-brands fa-github" />
           </a>
+          <FolderBtn />
         </div>
       </aside>
 
@@ -86,6 +94,20 @@ export default Project;
  * Solution: add priority prop to next Image
  *
  * Info: https://nextjs.org/docs/pages/api-reference/components/image#priority
+ * =============================================================================
+ 
+ * -----------------------------------------------------------------------------
+ * [2] Async Component : Incorrect Type error
+ * -----------------------------------------------------------------------------
  *
+ * Issue:
+ * TypeScript throws error for any async JSX component
+ *
+ * Workaround: add @ts-expect-error
+ * Info: https://youtu.be/sr8bwLXDm3U?t=88
+ *
+ * Fixed in TypeScript 5.1+
  * =============================================================================
  */
+
+//
