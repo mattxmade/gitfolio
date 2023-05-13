@@ -1,0 +1,118 @@
+:root {
+  --content-padding: 1rem 2rem;
+  --content-highlight: rgb(246, 248, 250);
+
+  --content-border-radius: 0.5rem;
+  --content-border: 0.1rem solid rgb(213, 216, 218);
+
+  --text-highlight: rgb(9, 105, 218);
+  --icon-margin-right: 1.5rem;
+}
+
+.repo__content {
+  outline: var(--content-border);
+  border-radius: var(--content-border-radius);
+
+  margin: 2rem 0;
+
+  color: black;
+  background-color: white;
+
+  li {
+    display: flex;
+    padding: var(--content-padding);
+    border: var(--content-border);
+  }
+
+  li:first-child {
+    background-color: var(--content-highlight);
+  }
+
+  li:hover {
+    background-color: var(--content-highlight);
+  }
+
+  .repo__content__header {
+    justify-content: space-between;
+  }
+
+  i.fa {
+    font-size: 1.5rem;
+    margin-right: var(--icon-margin-right);
+  }
+}
+
+.repo-content__item {
+  display: flex;
+
+  div,
+  p {
+    width: calc(100% / 3);
+    width: 100%;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block; // https://stackoverflow.com/a/17783233
+  }
+
+  p {
+    color: rgb(74, 121, 121);
+    flex: auto;
+    text-align: left;
+  }
+  p:last-child {
+    text-align: right;
+  }
+
+  div p {
+    color: black;
+    text-align: left !important;
+  }
+}
+
+.repo-item--hover:hover {
+  color: var(--text-highlight);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.code-view__history-btn {
+  color: whitesmoke;
+
+  i.fa {
+    font-size: 2.3rem;
+  }
+}
+.code-view__history-btn p {
+  font-size: 2rem;
+}
+.code-view__history-btn:hover {
+  color: rgb(170, 170, 255);
+}
+
+i.fa-folder {
+  color: rgb(84, 174, 255);
+}
+.fa-file {
+  color: darkgrey;
+}
+
+.repo-nav-btns {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    font-size: 2rem;
+  }
+}
+
+.nav-btn--black {
+  cursor: pointer;
+  color: black;
+}
+
+.nav-btn--grey {
+  cursor: auto;
+  color: darkgrey;
+}
