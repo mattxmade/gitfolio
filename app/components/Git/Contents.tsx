@@ -1,3 +1,7 @@
+"use client";
+
+import React, { useState } from "react";
+
 import { DirectoryItem } from "@/app/types/application";
 import { Fragment } from "react";
 
@@ -7,7 +11,21 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Contents = (props: Props) => {
+type IContentsIndex = Array<DirectoryItem[] | []>;
+
+const Contents = ({ contents, ...props }: Props) => {
+  const [currDirectory, setCurrDirectory] = useState<DirectoryItem[]>(contents);
+  const [prevDirectory, setPrevDirectory] = useState<IContentsIndex>([]);
+
+  const [currentFile, setCurrentFile] = useState<DirectoryItem | null>(null);
+
+  const handleViewFile = (file: DirectoryItem) => {
+    const fileObj = { ...file };
+
+    setCurrentFile(fileObj);
+    document.body.style.overflowY = "hidden";
+  };
+
   return (
     <Fragment>
       <h2>{props.name}</h2>
@@ -18,15 +36,31 @@ const Contents = (props: Props) => {
           </p>
 
           <div className="repo-nav-btns">
-            <button className="nav-btn--grey">
+            <button
+              className={
+                prevDirectory.length ? "nav-btn--black" : "nav-btn--grey"
+              }
+              onClick={
+                prevDirectory.length
+                  ? () => {
+                      setCurrDirectory(prevDirectory[prevDirectory.length - 1]);
+                      setPrevDirectory((prevDirectory) =>
+                        [...new Array(prevDirectory.length - 1)].map(
+                          (_val, i) => prevDirectory[i]
+                        )
+                      );
+                    }
+                  : () => null
+              }
+            >
               <i className="fa-solid fa-circle-arrow-left" />
             </button>
           </div>
         </li>
 
-        {props.contents
+        {currDirectory
           .sort((a, z) => a.type.localeCompare(z.type))
-          .map((item, index) => {
+          .map((item: any, index) => {
             return (
               <Fragment>
                 <li
@@ -36,14 +70,27 @@ const Contents = (props: Props) => {
                   <div style={{ display: "flex" }}>
                     <i
                       className={
-                        item.name.includes(".")
-                          ? "fa fa-regular fa-file"
-                          : "fa fa-solid fa-folder"
+                        item.type === "dir"
+                          ? "fa fa-solid fa-folder"
+                          : "fa fa-regular fa-file"
                       }
                     />
 
-                    <p className="repo-item--hover repo-item__item-name">
-                      {item.name}
+                    <p
+                      className="repo-item--hover repo-item__item-name"
+                      onClick={
+                        item.type === "file"
+                          ? () => handleViewFile(item)
+                          : () => {
+                              setPrevDirectory((prevDir) => [
+                                ...prevDir,
+                                currDirectory,
+                              ]);
+                              setCurrDirectory(item.contents);
+                            }
+                      }
+                    >
+                      {item?.name}
                     </p>
                   </div>
                 </li>
