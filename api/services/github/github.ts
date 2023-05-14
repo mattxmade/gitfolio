@@ -60,14 +60,16 @@ const editItemProperties = (contents: DirectoryItem[]) =>
   contents.map((item: DirectoryItem) => {
     omit.properties.forEach((prop) => item[prop] && delete item[prop]);
 
-    return item as DirectoryItem | Partial<DirectoryItem>;
-  }) as Array<DirectoryItem | Partial<DirectoryItem>>;
+    return item;
+  });
 
 const { ignore } = ownerConfig;
 
 // Filter dir(s)/file(s) that are not required | examples >> dir: media, assets | extenstions: .jpg, .webp
 const contentsFilter = (contents: DirectoryItem[]) =>
   contents.filter((item: DirectoryItem) => {
+    if (item.type === "symlink") return;
+
     if (ignore.directories.includes(item.name)) return;
     if (ignore.extensions.some((ext: string) => item.name.includes(ext)))
       return;
@@ -90,19 +92,18 @@ const unpackRepoContent = async (data: DirectoryItem[], repoName: string) =>
 
     if (item.type === "dir") {
       // Get contents from current directory | TODO: Handle catch
-      const subdirectory = (await getDirectoryContents(
-        item.path,
-        repoName
-      )) as DirectoryItem[];
+      const subdirectory = await getDirectoryContents(item.path, repoName);
 
       // Resolve all Promises from recursive fn call
       const contents = (await Promise.all([
-        ...(await unpackRepoContent(subdirectory, repoName)),
-      ])) as DirectoryItem[];
+        ...(await unpackRepoContent(subdirectory as DirectoryItem[], repoName)),
+      ])) as DirectoryItem[] | [];
 
-      item.contents = editItemProperties(contents);
+      item.contents = contents ? editItemProperties(contents) : [];
       return item;
     }
+
+    return item;
   });
 
 // Content Request Type Definition
@@ -122,10 +123,12 @@ const handleRepoContentRequest = async (req: string) => {
     data: object | Array<object>;
   };
 
+  // if (!req) return // search for matching repo | don't want unnecessary calls
+
   const reqRootContents = {
     headers,
     path: "",
-    repo: req ?? ownerConfig.repo,
+    repo: req,
     owner: ownerConfig.owner,
   } as IContentRequest;
 
@@ -137,7 +140,7 @@ const handleRepoContentRequest = async (req: string) => {
     const contents = Array.isArray(rootContents.data)
       ? await Promise.all([
           ...((await unpackRepoContent(
-            rootContents.data,
+            rootContents.data as DirectoryItem[],
             reqRootContents.repo
           )) as Promise<DirectoryItem>[]),
         ])
@@ -173,6 +176,9 @@ const handleRepoContentRequest = async (req: string) => {
   });
 };
 
-const github = { handleRepoContentRequest };
+const github = {
+  octokit,
+  handleRepoContentRequest,
+};
 
 export default github;
