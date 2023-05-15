@@ -1,4 +1,4 @@
-import "server only";
+import "server-only";
 
 import React from "react";
 import Contents from "./Contents";
@@ -21,6 +21,7 @@ const Repository = async (props: Props) => {
 
   return (
     <div
+      className="repo-drawer"
       style={{
         top: "11rem",
         width: "100%",
