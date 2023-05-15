@@ -1,6 +1,6 @@
 // server component
 
-import React, { Fragment } from "react";
+import React, { Fragment, Suspense } from "react";
 
 // next Components
 import Link from "next/link";
@@ -10,7 +10,7 @@ import Image from "next/image";
 import Icon from "./core/Icon";
 import Button from "./widgets/Button";
 import NameTag from "./widgets/NameTag";
-import FolderBtn from "./Project/FolderBtn";
+import FolderBtn from "./Git/FolderBtn";
 import Repository from "./Git/Repository";
 
 // Application Types
@@ -23,8 +23,10 @@ const Project = ({ project }: React.PropsWithChildren<Props>) => {
 
   return (
     <Fragment>
-      {/* @ts-expect-error [2]*/}
-      <Repository repoName={project.repo} />
+      <Suspense>
+        {/* @ts-expect-error [2]*/}
+        <Repository repoName={project.repo} />
+      </Suspense>
 
       <aside className="project-card__aside">
         <h2>{project.title}</h2>
