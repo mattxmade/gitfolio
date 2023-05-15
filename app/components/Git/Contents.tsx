@@ -1,9 +1,8 @@
 "use client";
+import React, { Fragment, useState } from "react";
 
-import React, { useState } from "react";
-
-import { DirectoryItem } from "@/app/types/application";
-import { Fragment } from "react";
+import FileModal from "./FileModal";
+import { DirectoryItem } from "@/api/services/github/types";
 
 type Props = {
   name: string;
@@ -24,11 +23,42 @@ const Contents = ({ contents, ...props }: Props) => {
 
     setCurrentFile(fileObj);
     document.body.style.overflowY = "hidden";
+
+    setViewFile(true);
   };
+
+  const [viewFile, setViewFile] = useState<boolean>(false);
 
   return (
     <Fragment>
-      <h2>{props.name}</h2>
+      {currentFile ? (
+        <FileModal
+          open={viewFile}
+          file={currentFile}
+          className="modal--repo-file"
+        >
+          <Fragment>
+            <button
+              className="modal__close-button"
+              style={{
+                color: "whitesmoke",
+                position: "relative",
+                zIndex: 2,
+              }}
+              onClick={() => {
+                document.body.style.overflowY = "initial";
+
+                setViewFile(false);
+                setCurrentFile(null);
+              }}
+            >
+              <i className="fa fa-solid fa-circle-xmark" />
+            </button>
+          </Fragment>
+        </FileModal>
+      ) : null}
+
+      {/* <h2>{props.name}</h2> */}
       <ul className="repo__content">
         <li className="repo__content__header">
           <p>
@@ -60,13 +90,10 @@ const Contents = ({ contents, ...props }: Props) => {
 
         {currDirectory
           .sort((a, z) => a.type.localeCompare(z.type))
-          .map((item: any, index) => {
+          .map((item, index) => {
             return (
-              <Fragment>
-                <li
-                  className="repo-content__item"
-                  key={item.name + "_" + index}
-                >
+              <Fragment key={item.name + "_" + index}>
+                <li className="repo-content__item">
                   <div style={{ display: "flex" }}>
                     <i
                       className={
