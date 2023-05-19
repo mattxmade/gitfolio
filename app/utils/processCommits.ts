@@ -125,3 +125,19 @@ export const sortCommitsByDate = (commitsToSort: Array<App_CommitItem>) => {
     return item;
   });
 };
+
+import { DirectoryItem, App_SubmoduleItem } from "@/api/services/github/types";
+
+export const getLastCommit = (directory: DirectoryItem[]) => {
+  let commit;
+
+  directory.find((item) => {
+    if (item.type !== "file") return undefined;
+
+    const file = item as unknown as App_SubmoduleItem;
+    commit = file.commits[0];
+  });
+
+  if (!commit) return;
+  return commit as App_CommitItem;
+};
