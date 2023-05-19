@@ -21,19 +21,19 @@ const processDifference = (date: number, type: string): string | undefined => {
 
   switch (type) {
     case "year":
-      text = isAgeAboveOne(date) ? `${date} years ago` : `${date} last year`;
+      text = isAgeAboveOne(date) ? `${date} years ago` : "last year";
       break;
 
     case "month":
-      text = isAgeAboveOne(date) ? `${date} months ago` : `${date} last month`;
+      text = isAgeAboveOne(date) ? `${date} months ago` : "last month";
       break;
 
     case "week":
-      text = isAgeAboveOne(date) ? `${date} weeks ago` : `${date} last week`;
+      text = isAgeAboveOne(date) ? `${date} weeks ago` : "last week";
       break;
 
     case "day":
-      text = isAgeAboveOne(date) ? `${date} days ago` : `${date} yesterday`;
+      text = isAgeAboveOne(date) ? `${date} days ago` : "yesterday";
       break;
   }
 
@@ -41,6 +41,8 @@ const processDifference = (date: number, type: string): string | undefined => {
 };
 
 const formatCommitData = (date: string): string => {
+  if (!date) return "";
+
   const commitYear = Number(date.slice(0, 4));
   const commitMonth = Number(date.slice(5, 7)) - 1;
   const commitDay = Number(date.slice(8, 10));
@@ -55,6 +57,8 @@ const formatCommitData = (date: string): string => {
 };
 
 export const processCommitDate = (date: string) => {
+  if (!date) return;
+
   // Date now
   const dateToday = Date.now();
   const currentYear = getYear(dateToday);
