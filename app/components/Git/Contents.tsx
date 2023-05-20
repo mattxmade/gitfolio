@@ -3,6 +3,7 @@ import React, { Fragment, useState } from "react";
 
 import {
   DirectoryItem,
+  App_PatchItem,
   App_CommitItem,
   App_SubmoduleItem,
   App_DirectoryItem,
@@ -10,8 +11,8 @@ import {
 
 import FileModal from "./FileModal";
 import ContentsHeader from "./FileSystem/ContentsHeader";
-import DirCommitFragment from "./FileSystem/DirCommitFragment";
-import FileCommitFragment from "./FileSystem/FileCommitFragment";
+import FileElement from "./FileSystem/FileItem";
+import DirectoryElement from "./FileSystem/DirectoryItem";
 
 import { getLastCommit } from "@/app/utils/processCommits";
 
@@ -25,14 +26,18 @@ type IContentsIndex = Array<DirectoryItem[] | []>;
 
 const Contents = ({ contents, ...props }: Props) => {
   const [currDirectory, setCurrDirectory] = useState<DirectoryItem[]>(contents);
-  const [prevDirectory, setPrevDirectory] = useState<IContentsIndex>([]);
+  const [traversedDirs, setTraversedDirs] = useState<IContentsIndex>([]);
+  // const [traversedDirs, setTraversedDirs] = useState<IContentsIndex>([]);
 
-  const [currentFile, setCurrentFile] = useState<DirectoryItem | null>(null);
+  const [currentFile, setCurrentFile] = useState<
+    App_SubmoduleItem | App_PatchItem | null
+  >(null);
+
   const [commitHistory, setCommitHistory] = useState([]);
 
   const handleViewFile = (
-    file: DirectoryItem,
-    commits: App_CommitItem[] | null
+    file: App_PatchItem | App_SubmoduleItem,
+    commits: App_CommitItem[] | null | any
   ) => {
     const fileObj = { ...file };
 
@@ -42,16 +47,19 @@ const Contents = ({ contents, ...props }: Props) => {
     setViewFile(true);
   };
 
-  // Only called if currently in a subdirectory
-  const handleRepoLevel = () => {
-    // Navigate up one level to previous directory
-    setCurrDirectory(prevDirectory[prevDirectory.length - 1]);
+  const moveToNextDirectory = (subdirectory: any) => {
+    setTraversedDirs((prevDir) => [...prevDir, currDirectory]);
+    setCurrDirectory(subdirectory);
+  };
 
-    // currDir becomes prevDir and added to list
-    // Array length dependent on the number of levels a directory has
-    setPrevDirectory((prevDirectory) =>
-      [...new Array(prevDirectory.length - 1)].map(
-        (_val, i) => prevDirectory[i]
+  // Only callable if currently in a subdirectory
+  const moveToPrevDirectory = () => {
+    setCurrDirectory(traversedDirs[traversedDirs.length - 1]);
+
+    // Array of traversed directories minus the current directory we want to move from
+    setTraversedDirs((currentTraversedDirectories) =>
+      [...new Array(currentTraversedDirectories.length - 1)].map(
+        (_val, i) => currentTraversedDirectories[i]
       )
     );
   };
@@ -63,36 +71,34 @@ const Contents = ({ contents, ...props }: Props) => {
       {currentFile ? (
         <FileModal
           open={viewFile}
-          file={currentFile}
+          source={currentFile as unknown as App_SubmoduleItem & App_PatchItem}
           className="modal--repo-file"
         >
-          <Fragment>
-            <button
-              className="modal__close-button"
-              style={{
-                color: "whitesmoke",
-                position: "relative",
-                zIndex: 2,
-              }}
-              onClick={() => {
-                document.body.style.overflowY = "initial";
+          <button
+            className="modal__close-button"
+            style={{
+              color: "whitesmoke",
+              position: "relative",
+              zIndex: 2,
+            }}
+            onClick={() => {
+              document.body.style.overflowY = "initial";
 
-                setViewFile(false);
-                setCurrentFile(null);
-              }}
-            >
-              <i className="fa fa-solid fa-circle-xmark" />
-            </button>
-          </Fragment>
+              setViewFile(false);
+              setCurrentFile(null);
+            }}
+          >
+            <i className="fa fa-solid fa-circle-xmark" />
+          </button>
         </FileModal>
       ) : null}
 
       <ul className="repo__content">
         <li className="repo__content__header">
           <ContentsHeader
-            lastCommit={getLastCommit(currDirectory)}
-            prevDirectory={prevDirectory}
-            handleRepoLevel={handleRepoLevel}
+            lastCommit={getLastCommit(contents)}
+            traversedDirs={traversedDirs}
+            moveToPrevDirectory={moveToPrevDirectory}
           />
         </li>
 
@@ -101,43 +107,23 @@ const Contents = ({ contents, ...props }: Props) => {
           .map((item, index) => {
             return (
               <li key={item.name + "_" + index} className="repo-content__item">
-                <div style={{ display: "flex" }}>
-                  <i
-                    className={
-                      item.type === "dir"
-                        ? "fa fa-solid fa-folder"
-                        : "fa fa-regular fa-file"
-                    }
-                  />
-
-                  <p
-                    className="repo-item--hover repo-item__item-name"
-                    onClick={
-                      item.type === "file"
-                        ? () => handleViewFile(item, null)
-                        : () => {
-                            setPrevDirectory((prevDir) => [
-                              ...prevDir,
-                              currDirectory,
-                            ]);
-                            setCurrDirectory(item.contents);
-                          }
-                    }
-                  >
-                    {item?.name}
-                  </p>
-                </div>
-
                 {item.type === "file" ? (
-                  <FileCommitFragment
+                  <FileElement
                     file={item as unknown as App_SubmoduleItem}
                     handleViewFile={handleViewFile}
                   />
                 ) : item.type === "dir" ? (
-                  <DirCommitFragment
+                  <DirectoryElement
                     directory={item as unknown as App_DirectoryItem}
                     handleViewFile={handleViewFile}
-                  />
+                  >
+                    <p
+                      className="repo-item--hover repo-item__item-name"
+                      onClick={() => moveToNextDirectory(item.contents)}
+                    >
+                      {item?.name}
+                    </p>
+                  </DirectoryElement>
                 ) : (
                   <Fragment />
                 )}
