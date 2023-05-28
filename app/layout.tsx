@@ -4,11 +4,11 @@ export const metadata = {
   title: "Portfolio",
 };
 
-export default function RootLayout({
-  children,
-}: {
+type RootLayoutProps = {
   children: React.ReactNode;
-}) {
+};
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
@@ -18,7 +18,15 @@ export default function RootLayout({
           rel="stylesheet"
           type="text/css"
         />
-        <div id="root">{children}</div>
+        <div id="root">
+          <div className="wrapper">
+            <div className="overlay">
+              <header>Header</header>
+              {children}
+              <footer>Footer</footer>
+            </div>
+          </div>
+        </div>
       </body>
     </html>
   );
