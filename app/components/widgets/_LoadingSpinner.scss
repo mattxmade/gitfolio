@@ -1,0 +1,25 @@
+.loading {
+  position: relative;
+  z-index: 1000;
+  transform: rotate(0);
+  -webkit-animation: 3s infinite normal rotate;
+  animation: 3s infinite normal rotate;
+}
+
+@-webkit-keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
