@@ -1,31 +1,14 @@
 // Dependencies
 import "server-only";
-import { Octokit } from "octokit";
 
-import { ownerConfig } from "./ownerConfig";
+import { ownerConfig, headers, octokit } from "./ownerConfig";
+import getCommits from "./getCommits";
 
 // types
 import { DirectoryItem } from "./types";
 
-// Authenticate API access using Octokit
-const octokit = new Octokit({ auth: process.env.TKN });
-
-// Set API version | In case of breaking changes in future versions
-const headers = { "X-GitHub-Api-Version": process.env.API_VERSION };
-
-const rateLimitConfig = {
-  headers,
-  owner: ownerConfig.owner,
-};
-
-const requestConfig = {
-  headers,
-  owner: ownerConfig.owner,
-  repo: ownerConfig.repo,
-};
-
 // API request to get file contents | path to directory : name of repository
-const getDirectoryContents = async (path: string, repo: string) => {
+export const getDirectoryContents = async (path: string, repo: string) => {
   try {
     const contents = await octokit.rest.repos.getContent({
       path,
@@ -43,7 +26,7 @@ const getDirectoryContents = async (path: string, repo: string) => {
 };
 
 // API request to get file contents | url is a property from file object
-const getFileContents = async (url: string) => {
+export const getFileContents = async (url: string) => {
   try {
     const source = await octokit.request(`GET ${url}`, { headers });
     return source.data;
@@ -78,13 +61,28 @@ const contentsFilter = (contents: DirectoryItem[]) =>
   });
 
 // Unpack repository | process content
-const unpackRepoContent = async (data: DirectoryItem[], repoName: string) =>
+const unpackRepoContent = async (
+  data: DirectoryItem[],
+  repoName: string,
+  requireCommits: boolean
+) =>
   contentsFilter([...data]).map(async (item: DirectoryItem) => {
     if (item.type === "file" || item.type === "submodule") {
       if (!item.download_url) return item;
 
       // Get file contents | TODO: Handle catch
       const download = await getFileContents(item.download_url);
+
+      if (requireCommits) {
+        const commits = await getCommits({
+          sha: undefined,
+          repo: repoName,
+          path: item.path,
+          owner: ownerConfig.owner as string,
+        });
+
+        item.commits = commits;
+      }
 
       item.download = download;
       return item;
@@ -94,16 +92,20 @@ const unpackRepoContent = async (data: DirectoryItem[], repoName: string) =>
       // Get contents from current directory | TODO: Handle catch
       const subdirectory = await getDirectoryContents(item.path, repoName);
 
-      // Resolve all Promises from recursive fn call
       const contents = (await Promise.all([
-        ...(await unpackRepoContent(subdirectory as DirectoryItem[], repoName)),
+        ...(await unpackRepoContent(
+          subdirectory as DirectoryItem[],
+          repoName,
+          requireCommits
+        )),
       ])) as DirectoryItem[] | [];
 
-      item.contents = contents ? editItemProperties(contents) : [];
+      item.contents = contents
+        ? editItemProperties(contents as DirectoryItem[])
+        : [];
+
       return item;
     }
-
-    return item;
   });
 
 // Content Request Type Definition
@@ -114,21 +116,30 @@ type IContentRequest = {
   headers: { accept: string; "X-GitHub-Api-Version": string };
 };
 
-const handleRepoContentRequest = async (req: string) => {
-  // TODO: handle request
+type IContentResponse = {
+  status: number;
+  message: string;
+  data: object | Array<object> | [];
+};
 
-  const response = {} as {
-    status: number;
-    message: string;
-    data: object | Array<object>;
-  };
+const handleRepoContentRequest = async (request: string, rCommits: boolean) => {
+  // Check if repository exists against list of available repositories
+  const availableRepositories = ownerConfig.repositories.available as string[];
 
-  // if (!req) return // search for matching repo | don't want unnecessary calls
+  if (!availableRepositories.some((project) => project === request))
+    return {
+      data: [],
+      message: "Not Found",
+      status: 404,
+    } as IContentResponse;
+
+  // Construct new response object after repo check
+  const response = {} as IContentResponse;
 
   const reqRootContents = {
     headers,
     path: "",
-    repo: req,
+    repo: request,
     owner: ownerConfig.owner,
   } as IContentRequest;
 
@@ -141,7 +152,8 @@ const handleRepoContentRequest = async (req: string) => {
       ? await Promise.all([
           ...((await unpackRepoContent(
             rootContents.data as DirectoryItem[],
-            reqRootContents.repo
+            reqRootContents.repo,
+            rCommits
           )) as Promise<DirectoryItem>[]),
         ])
       : [];
@@ -149,7 +161,7 @@ const handleRepoContentRequest = async (req: string) => {
     // Construct new repository object
     const newRepo = {
       name: reqRootContents.repo,
-      contents: contents ? editItemProperties(contents) : contents,
+      contents: contents ? editItemProperties(contents) : [],
     };
 
     // Returns 200 | Set success message
@@ -161,11 +173,6 @@ const handleRepoContentRequest = async (req: string) => {
     response.status = error.status;
     response.message = error.response.data.message;
   }
-
-  // Remaining requests after calling API
-  console.log(
-    (await octokit.request("GET /rate_limit", rateLimitConfig)).data.rate
-  );
 
   // return response
   return new Response(JSON.stringify(response), {
