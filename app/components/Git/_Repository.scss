@@ -4,6 +4,15 @@
 /*================
   Repository Dir
 =================*/
+.repo-drawer {
+  top: 11rem;
+  width: 100%;
+  height: calc(100% - 11rem);
+  position: absolute;
+  overflow: hidden;
+  padding: 0.5rem 0 0;
+}
+
 .repo-folder {
   padding: 0 2rem;
   width: calc(100% + 17px);
@@ -15,7 +24,7 @@
     rgb(47, 79, 79, 0.8)
   );
 
-  transition: 1.3s;
+  transition: 0.9s;
   transform: translate(0, 100%);
 
   @media (max-width: 768px) {
