@@ -108,7 +108,7 @@ const core = {
 };
 
 // File has list of commit objects
-const file = {
+export const file = {
   title: "File",
   description: "File submodule item",
   type: "object",
@@ -139,7 +139,7 @@ const file = {
 };
 
 // Directory has list of files and or directories
-const directory = {
+export const directory = {
   title: "Directory",
   description: "Directory item",
   type: "array",
@@ -199,13 +199,4 @@ const gitRepo = {
     },
   },
   numOfProps: 2,
-};
-
-exports.gitRepoSchema = {
-  gitRepo,
-  core,
-  directory,
-  file,
-  commit,
-  patch,
 };
