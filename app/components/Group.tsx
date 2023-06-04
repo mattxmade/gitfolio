@@ -24,8 +24,8 @@ const Group = (props: React.PropsWithChildren<Props>) => {
 
       <ul className="projects">
         {props.projects.map((project, index) => (
-          <li key={index} className="project-card">
-            <Project project={project} />
+          <li key={index} id={project?.id} className="project-card">
+            <Project project={project} index={index} />
           </li>
         ))}
       </ul>
