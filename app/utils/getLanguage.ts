@@ -1,9 +1,14 @@
 // CodeMirror Languages
-import { css } from "@codemirror/lang-css";
-import { json } from "@codemirror/lang-json";
-import { html } from "@codemirror/lang-html";
-import { markdown } from "@codemirror/lang-markdown";
-import { javascript } from "@codemirror/lang-javascript";
+import { cssLanguage } from "@codemirror/lang-css";
+import { jsonLanguage } from "@codemirror/lang-json";
+//import { htmlLanguage } from "@codemirror/lang-html";
+//import { markdownLanguage } from "@codemirror/lang-markdown";
+import {
+  javascriptLanguage,
+  jsxLanguage,
+  //typescriptLanguage,
+  //tsxLanguage,
+} from "@codemirror/lang-javascript";
 
 const languages = [
   ".js",
@@ -18,7 +23,7 @@ const languages = [
 ];
 
 const getLanguage = (filename: string) => {
-  if (typeof filename !== "string") return markdown();
+  if (typeof filename !== "string") return jsxLanguage;
 
   const prefix = languages.find(
     (prefix) => filename.includes(prefix) && prefix
@@ -26,29 +31,31 @@ const getLanguage = (filename: string) => {
 
   switch (prefix) {
     case ".js":
-      return javascript();
+      return javascriptLanguage;
     case ".jsx":
-      return javascript({ jsx: true });
+      return jsxLanguage;
 
     case ".ts":
-      return javascript({ typescript: true });
+      return javascriptLanguage; // typescriptLanguage;
     case ".tsx":
-      return javascript({ typescript: true, jsx: true });
+      return jsxLanguage; // tsxLanguage;
 
     case ".html":
-      return html();
+      return jsxLanguage; // htmlLanguage;
     case ".css":
-      return css();
+      return cssLanguage;
     case ".scss":
-      return css();
+      return cssLanguage;
 
     case ".json":
-      return json();
-    case ".md":
-      return markdown();
+      return jsonLanguage;
+
+    // bug: crashes in production
+    // case ".md":
+    //   return markdownLanguage;
 
     default:
-      return markdown();
+      return jsxLanguage;
   }
 };
 
