@@ -1,14 +1,17 @@
-import "./index.scss";
+import Link from "next/link";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Portfolio",
-};
+import "@/app/index.scss";
+import Nav from "./components/core/Nav";
+import { projectMetadata } from "./data/metadata";
+
+export const metadata: Metadata = projectMetadata;
 
 type RootLayoutProps = {
   children: React.ReactNode;
 };
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout(props: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
@@ -21,9 +24,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <div id="root">
           <div className="wrapper">
             <div className="overlay">
-              <header>Header</header>
-              {children}
-              <footer>Footer</footer>
+              <header>
+                <Nav />
+              </header>
+              {props.children}
+              <footer></footer>
             </div>
           </div>
         </div>
