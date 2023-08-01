@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 
 const Contents = dynamic(() => import("./Contents"));
 
-import github from "@/api/services/github/github";
+import github from "@/app/api/services/github/github";
 import { IRepository, IGitResponse } from "@/app/types/application";
 
 type Props = {
