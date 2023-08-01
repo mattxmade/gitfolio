@@ -1,25 +1,37 @@
-import React, { useEffect, useState, useRef, Fragment } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+"use client";
 
+import dynamic from "next/dynamic";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+const ReactCodeMirror = dynamic(() => import("@uiw/react-codemirror"));
+
+import {
+  App_PatchItem,
+  App_SubmoduleItem,
+} from "@/app/api/services/github/types";
 import getLanguage from "@/app/utils/getLanguage";
-import { DirectoryItem } from "@/api/services/github/types";
 
 type Props = {
-  file: DirectoryItem;
+  source: App_SubmoduleItem & App_PatchItem;
   children?: React.ReactNode;
 };
 
-const FileViewer = ({ file, children }: Props) => {
-  if (!file) return <Fragment />;
+const FileViewer = ({ source }: Props) => {
+  if (!source) return <></>;
+
+  const name = source.type === "file" ? source.name : source.filename;
+  const download = source.download ? source.download : source.patch;
+
+  const language = getLanguage(name);
 
   return (
-    <CodeMirror
-      editable={false}
-      theme={vscodeDark}
-      value={file.download}
-      extensions={[getLanguage(file.name)]}
-    />
+    <>
+      <ReactCodeMirror
+        editable={false}
+        theme={vscodeDark}
+        value={download}
+        extensions={language ? [language] : undefined}
+      />
+    </>
   );
 };
 
