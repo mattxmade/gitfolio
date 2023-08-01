@@ -1,7 +1,11 @@
 @use "./ui/nameTag";
+@use "./components/Hero";
 @use "./components/Modal";
 @use "./components/Project";
 @use "./components//Git/Repository";
+
+@use "./components/widgets/LoadingSpinner";
+@use "./components/transitions/Transition";
 
 /*=======
   Fonts
@@ -153,6 +157,34 @@ main {
 
   @media (max-width: 860px) {
     padding: 0 3rem;
+  }
+}
+
+header {
+  color: white;
+  display: grid;
+  padding: 1rem;
+  top: 0;
+  z-index: 10;
+  position: sticky;
+
+  background-color: black;
+
+  nav {
+    width: min(25rem, 35%);
+    justify-self: flex-end;
+
+    ul {
+      display: flex;
+      justify-content: space-around;
+
+      li {
+        cursor: pointer;
+      }
+      li:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 
