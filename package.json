@@ -22,21 +22,32 @@
   },
   "homepage": "https://github.com/mattxmade/portfolio#readme",
   "dependencies": {
-    "@octokit/types": "^9.2.2",
-    "@types/node": "20.0.0",
-    "@types/react": "18.2.5",
-    "@types/react-dom": "18.2.4",
-    "eslint": "8.39.0",
-    "eslint-config-next": "13.4.1",
-    "next": "13.4.1",
-    "octokit": "^2.0.14",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "@codemirror/lang-css": "^6.2.0",
+    "@codemirror/lang-html": "^6.4.5",
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/lang-markdown": "^6.2.0",
+    "@octokit/types": "^10.0.0",
+    "@types/node": "^20.3.3",
+    "@types/react": "^18.2.14",
+    "@types/react-codemirror": "^1.0.8",
+    "@types/react-dom": "^18.2.6",
+    "@uiw/codemirror-extensions-classname": "^4.21.7",
+    "@uiw/codemirror-theme-vscode": "^4.21.7",
+    "@uiw/react-codemirror": "^4.21.7",
+    "date-fns": "^2.30.0",
+    "eslint": "^8.44.0",
+    "nanoid": "^4.0.2",
+    "next": "^13.4.8",
+    "octokit": "^2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "server-only": "^0.0.1",
-    "typescript": "5.0.4"
+    "sharp": "^0.32.1",
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "encoding": "^0.1.13",
-    "sass": "^1.62.0"
+    "sass": "^1.63.6"
   }
 }
