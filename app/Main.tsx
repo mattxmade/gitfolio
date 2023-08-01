@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, ReactElement } from "react";
 
 import Modal from "./components/Modal";
 import { ProjectContext, IProjectContextProvider } from "./utils/Contexts";
@@ -11,6 +11,8 @@ type Props = {
 
 const Main = (props: Props) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  const currentProjects = useRef([]);
+  const isHydrated = useRef(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
@@ -20,6 +22,8 @@ const Main = (props: Props) => {
     setIsModalOpen,
     currentProject,
     setCurrentProject,
+    currentProjects,
+    isHydrated,
   } as IProjectContextProvider;
 
   return (
