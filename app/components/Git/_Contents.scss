@@ -91,6 +91,19 @@
   color: rgb(170, 170, 255);
 }
 
+// commit message
+.repo-item__commit-message {
+  position: relative;
+  visibility: visible;
+
+  @media (max-width: 768px) {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+}
+
 i.fa-folder {
   color: rgb(84, 174, 255);
 }
@@ -115,4 +128,116 @@ i.fa-folder {
 .nav-btn--grey {
   cursor: auto;
   color: darkgrey;
+}
+
+/*===============
+  CodeView Aside
+=================*/
+.code-view__aside {
+  z-index: 1;
+  transform: translate(0, 0);
+  transition: 0.3s;
+  box-shadow: 0 0 0.5rem 0.2rem rgb(75, 57, 57);
+
+  --commit-margin: 1.5rem;
+  --commit-menu-bgColor: rgb(100, 81, 100);
+
+  top: 0;
+  right: 0;
+
+  background-color: var(--commit-menu-bgColor);
+
+  padding: 2rem;
+  font-size: 1.4rem;
+
+  li {
+    margin: 0.5rem 0;
+    padding-left: 2rem;
+  }
+
+  li:first-child {
+    margin-bottom: var(--commit-margin);
+  }
+  li:last-child {
+    margin-top: var(--commit-margin);
+  }
+
+  li {
+    h4,
+    p {
+      width: 100%;
+    }
+
+    h4 {
+      color: rgb(179, 214, 181) !important;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: inline-block; // https://stackoverflow.com/a/17783233
+    }
+    h4:hover {
+      cursor: pointer;
+      color: var(--text-highlight) !important;
+      text-decoration: underline;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+
+    p,
+    i.fa {
+      font-size: 1.2rem;
+      color: lightblue !important;
+    }
+
+    i.fa {
+      z-index: 1;
+      padding-top: 0.23rem;
+      height: 1.5rem;
+      position: absolute;
+      top: -0.15rem;
+      left: -2.5rem;
+
+      border-radius: 100%;
+      background-color: var(--commit-menu-bgColor);
+    }
+  }
+
+  ul {
+    margin-top: 4rem;
+  }
+
+  .code-view__aside__content {
+    position: relative;
+    padding: 1rem;
+    background-color: black;
+  }
+}
+
+/*=============
+  Commit Date
+===============*/
+.commit-stem {
+  top: -2rem;
+  left: -1.8rem;
+  position: absolute;
+
+  width: 0.1rem;
+  height: 8.7rem;
+  background-color: lightgrey;
+}
+
+.commit-start {
+  margin-bottom: 1.5rem;
+}
+.commit-end {
+  margin-top: 1.5rem;
+}
+
+.hide {
+  transform: translate(100%, 0); // (100%, 0)
 }
