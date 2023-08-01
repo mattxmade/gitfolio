@@ -10,7 +10,7 @@ import {
   format,
 } from "date-fns";
 
-import { App_CommitItem } from "@/api/services/github/types";
+import { App_CommitItem } from "@/app/api/services/github/types";
 
 // example commit date: "2023-03-17T10:10:38Z";
 
@@ -18,6 +18,9 @@ const isAgeAboveOne = (date: number) => (date > 1 ? true : false);
 
 const processDifference = (date: number, type: string): string | undefined => {
   let text: string = "";
+
+  // if age is negative int, convert to positive int
+  date < 0 ? (date = -date) : date;
 
   switch (type) {
     case "year":
@@ -126,7 +129,10 @@ export const sortCommitsByDate = (commitsToSort: Array<App_CommitItem>) => {
   });
 };
 
-import { DirectoryItem, App_SubmoduleItem } from "@/api/services/github/types";
+import {
+  DirectoryItem,
+  App_SubmoduleItem,
+} from "@/app/api/services/github/types";
 
 export const getLastCommit = (directory: DirectoryItem[]) => {
   let commit;
@@ -135,7 +141,7 @@ export const getLastCommit = (directory: DirectoryItem[]) => {
     if (item.type !== "file") return undefined;
 
     const file = item as unknown as App_SubmoduleItem;
-    commit = file.commits[0];
+    commit = file.commits && file.commits[0];
   });
 
   if (!commit) return;
