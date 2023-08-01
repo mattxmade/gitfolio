@@ -7,17 +7,18 @@ import {
   App_CommitItem,
   App_SubmoduleItem,
   App_DirectoryItem,
-} from "@/api/services/github/types";
-
-import FileModal from "./FileModal";
-import ContentsHeader from "./FileSystem/ContentsHeader";
-import FileElement from "./FileSystem/FileItem";
-import DirectoryElement from "./FileSystem/DirectoryItem";
+} from "@/app/api/services/github/types";
 
 import { getLastCommit } from "@/app/utils/processCommits";
 
+import DirectoryElement from "./FileSystem/DirectoryItem";
+import ContentsHeader from "./FileSystem/ContentsHeader";
+import FileElement from "./FileSystem/FileItem";
+import FileHistory from "./FileHistory";
+import FileModal from "./FileModal";
+
 type Props = {
-  name: string;
+  id: string;
   contents: DirectoryItem[];
   children?: React.ReactNode;
 };
@@ -27,24 +28,31 @@ type IContentsIndex = Array<DirectoryItem[] | []>;
 const Contents = ({ contents, ...props }: Props) => {
   const [currDirectory, setCurrDirectory] = useState<DirectoryItem[]>(contents);
   const [traversedDirs, setTraversedDirs] = useState<IContentsIndex>([]);
-  // const [traversedDirs, setTraversedDirs] = useState<IContentsIndex>([]);
 
   const [currentFile, setCurrentFile] = useState<
     App_SubmoduleItem | App_PatchItem | null
   >(null);
 
-  const [commitHistory, setCommitHistory] = useState([]);
+  const [commitHistory, setCommitHistory] = useState<Array<any> | []>([]);
 
   const handleViewFile = (
     file: App_PatchItem | App_SubmoduleItem,
-    commits: App_CommitItem[] | null | any
+    commits: App_CommitItem[] | null
   ) => {
     const fileObj = { ...file };
 
     setCurrentFile(fileObj);
+    if (commits) setCommitHistory(commits);
     document.body.style.overflowY = "hidden";
 
     setViewFile(true);
+  };
+
+  const closeFileViewer = () => {
+    document.body.style.overflowY = "initial";
+
+    setViewFile(false);
+    setCurrentFile(null);
   };
 
   const moveToNextDirectory = (subdirectory: any) => {
@@ -67,29 +75,20 @@ const Contents = ({ contents, ...props }: Props) => {
   const [viewFile, setViewFile] = useState<boolean>(false);
 
   return (
-    <Fragment>
+    <>
       {currentFile ? (
         <FileModal
           open={viewFile}
           source={currentFile as unknown as App_SubmoduleItem & App_PatchItem}
           className="modal--repo-file"
+          closeFileViewer={closeFileViewer}
         >
-          <button
-            className="modal__close-button"
-            style={{
-              color: "whitesmoke",
-              position: "relative",
-              zIndex: 2,
-            }}
-            onClick={() => {
-              document.body.style.overflowY = "initial";
-
-              setViewFile(false);
-              setCurrentFile(null);
-            }}
-          >
-            <i className="fa fa-solid fa-circle-xmark" />
-          </button>
+          {commitHistory ? (
+            <FileHistory
+              commits={commitHistory}
+              handleViewFile={handleViewFile}
+            />
+          ) : null}
         </FileModal>
       ) : null}
 
@@ -131,7 +130,7 @@ const Contents = ({ contents, ...props }: Props) => {
             );
           })}
       </ul>
-    </Fragment>
+    </>
   );
 };
 
