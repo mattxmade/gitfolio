@@ -1,59 +1,30 @@
-// export const revalidate = 0;
-
 // Types
-import { IProject } from "./types/application";
+import { IProject } from "@/app/types/application";
 
 // Data
-import content from "./data/content";
+import { groups } from "@/app/data/content";
 
 // Components
-import Main from "./Main"; // client
-import Group from "./components/Group"; // server
+import Hero from "@/app/components/Hero";
+import Main from "@/app/Main"; // client
+import Group from "@/app/components/Group"; // server
 
 export default function Home() {
   return (
-    <div className="wrapper">
-      <div className="overlay">
-        <header></header>
-        <Main>
-          <section>
-            <Group
-              id="vanilla"
-              heading="HTML CSS JavaScript"
-              projects={content.vanilla as IProject[]}
-            />
-          </section>
+    <>
+      <Hero />
 
+      <Main>
+        {groups.map((group) => (
           <section>
             <Group
-              id="design"
-              heading="Design briefs | Repsonsive design"
-              projects={content.briefs as IProject[]}
+              id={group.id}
+              heading={group.heading}
+              projects={group.projects as IProject[]}
             />
           </section>
-
-          <section>
-            <Group
-              id="react"
-              heading="React"
-              projects={content.react as IProject[]}
-            />
-          </section>
-
-          <section>
-            <Group
-              id="threejs"
-              heading="ThreeJS"
-              projects={
-                [...new Array(1)].map(
-                  (v, i) => content.projects[i]
-                ) as IProject[]
-              }
-            />
-          </section>
-        </Main>
-        <footer></footer>
-      </div>
-    </div>
+        ))}
+      </Main>
+    </>
   );
 }
