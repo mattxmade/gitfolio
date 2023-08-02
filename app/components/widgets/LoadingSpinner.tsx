@@ -1,12 +1,11 @@
 "use client";
-import React, { CSSProperties, useEffect, useRef } from "react";
+import React, { CSSProperties } from "react";
+import useClient from "../hooks/useClient";
 
 type Props = {
-  id: string;
   size?: string;
   color?: string;
-  children?: React.ReactNode;
-  monitorElementLoadingByID: string;
+  children: React.ReactNode;
 };
 
 const div: CSSProperties = {
@@ -31,42 +30,15 @@ const style = {
   icon,
 };
 
-const LoadingSpinner = ({ monitorElementLoadingByID, children }: Props) => {
-  const ref = useRef<HTMLDivElement | null>(null);
+const LoadingSpinner = ({ children }: Props) => {
+  const ready = useClient();
 
-  useEffect(() => {
-    const loading = setInterval(() => {
-      const element = document.getElementById(monitorElementLoadingByID);
-
-      if (element && ref.current) {
-        ref.current.remove();
-        clearInterval(loading);
-      }
-    }, 0);
-  });
-
-  return (
-    <div ref={ref} style={style.div} className="loading">
+  return !ready ? (
+    <div style={style.div} className="loading">
       <i style={style.icon} className="fa fa-solid fa-spinner" />
-      {children ? (
-        <div
-          style={{
-            top: "50%",
-            left: "50%",
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            transform: "translate(-50%, -50%)",
-            fontSize: "8px",
-            display: "grid",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {children}
-        </div>
-      ) : null}
     </div>
+  ) : (
+    <>{children}</>
   );
 };
 
