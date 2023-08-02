@@ -1,15 +1,12 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-
-import "@/app/index.scss";
-import Nav from "./components/core/Nav";
 import { projectMetadata } from "./data/metadata";
-
-export const metadata: Metadata = projectMetadata;
+import Nav from "./components/core/Nav";
+import "@/app/index.scss";
 
 type RootLayoutProps = {
   children: React.ReactNode;
 };
+
+export const metadata = projectMetadata;
 
 export default function RootLayout(props: RootLayoutProps) {
   return (
