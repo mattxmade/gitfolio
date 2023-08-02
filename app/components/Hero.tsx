@@ -17,6 +17,7 @@ const Hero = () => {
 
         <div className="splash-screen__hero">
           <Image
+            priority
             id="hero-img"
             src={heroContent.image.src}
             alt={heroContent.image.alt}
