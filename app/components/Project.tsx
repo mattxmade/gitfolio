@@ -1,7 +1,7 @@
 // server component
 import "server-only";
 
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import Image from "next/image";
 
 // Custom Components
@@ -15,6 +15,7 @@ import LoadingSpinner from "./widgets/LoadingSpinner";
 
 // Application Types
 import { IProject } from "../types/application";
+import Repository from "./Git/Repository";
 
 type ProjectProps = {
   index: number;
@@ -27,7 +28,15 @@ const Project = ({ project, ...props }: ProjectProps) => {
 
   return (
     <Fragment>
-      <div id={`${project.id}-repo-drawer`} className="repo-drawer" />
+      <div id={`${project.id}-repo-drawer`} className="repo-drawer">
+        <Suspense key={project.id}>
+          <Repository
+            id={project.id}
+            repoName={project.repo}
+            requireCommits={true}
+          />
+        </Suspense>
+      </div>
 
       <aside className="project-card__aside">
         <DivMask offset={props.index + 1} delay={200}>
