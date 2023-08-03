@@ -106,6 +106,9 @@ const Project = ({ project, ...props }: ProjectProps) => {
             id={`project-card__image-${project.id}`}
             src={project.img.src}
             alt={project.img.alt}
+            style={{
+              transform: project.img.transform ?? "translate(-50%, -50%)",
+            }}
           />
         </DivMask>
         {/* <Button project={project} className="img-mask">
