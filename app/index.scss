@@ -47,10 +47,6 @@ body {
 #root {
   background: url("./assets/svg/honeycomb_v1.svg");
   background-size: contain;
-
-  svg {
-    fill: pink;
-  }
 }
 
 //------------------------------------------------------------------------------
@@ -89,7 +85,7 @@ h3 {
   font-size: 2rem; // 2.2rem
 
   @media (max-width: 540px) {
-    text-align: left;
+    // text-align: left;
     font-size: 1.8rem;
 
     margin-bottom: 1rem;
@@ -171,7 +167,6 @@ header {
   background-color: black;
 
   nav {
-    width: min(25rem, 35%);
     justify-self: flex-end;
 
     ul {
@@ -180,6 +175,7 @@ header {
 
       li {
         cursor: pointer;
+        margin: 0 0.5rem;
       }
       li:hover {
         text-decoration: underline;
@@ -199,6 +195,17 @@ section h2 {
 
 footer {
   width: 100%;
+}
+
+/*===========
+  Utilities
+=============*/
+.tech-icon {
+  font-size: var(--modal-icon-size);
+  width: calc(var(--modal-icon-size) + 0.8rem);
+  height: auto;
+
+  position: relative;
 }
 
 /*=======
