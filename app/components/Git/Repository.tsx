@@ -40,7 +40,9 @@ const Repository = async ({ id, repoName, requireCommits }: Props) => {
         overflowY: "scroll",
       }}
     >
-      <Contents id={id} contents={gitRepo.contents} />
+      {gitRepo.contents ? (
+        <Contents id={id} contents={gitRepo.contents} />
+      ) : null}
     </div>
   );
 };
