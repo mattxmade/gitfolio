@@ -10,7 +10,6 @@
   transform: translate(-50%, -50%);
 
   padding: 1rem 1rem 3rem;
-  // padding: 1rem 0 0;
 
   border: 0.5rem solid pink;
   background-color: white;
@@ -47,16 +46,14 @@
   }
 }
 
-.modal__description,
-.project-card__description {
+.modal__description {
   justify-self: center;
 
   margin-bottom: 2rem;
   padding: 0 2rem;
 }
 
-.modal__tech-icons-list,
-.project-card__tech-icons-list {
+.modal__tech-icons-list {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,16 +71,7 @@
   }
 }
 
-.tech-icon {
-  font-size: var(--modal-icon-size);
-  width: calc(var(--modal-icon-size) + 0.8rem);
-  height: auto;
-
-  position: relative;
-}
-
-.modal__icon-mask,
-.project-card__icon-mask {
+.modal__icon-mask {
   top: 0;
   left: 0;
   position: absolute;
