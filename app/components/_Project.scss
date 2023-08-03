@@ -53,11 +53,14 @@
     margin: 1.2rem 1rem 1.7rem 0.2rem;
 
     @media (max-width: 480px) {
-      width: 20rem;
+      width: 50%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       display: inline-block;
+    }
+    @media (max-width: 340px) {
+      width: 40%;
     }
   }
 
