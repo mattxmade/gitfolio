@@ -32,7 +32,7 @@ const Main = (props: Props) => {
         {currentProject ? <Modal project={currentProject} /> : null}
       </dialog>
 
-      <main>{props.children}</main>
+      <main id="projects">{props.children}</main>
     </ProjectContext.Provider>
   );
 };
