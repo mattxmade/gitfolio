@@ -63,48 +63,12 @@
   background-color: darkslateblue;
 }
 
-.threejs-bg--background {
-  width: 100%;
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-}
-
-.threejs-bg,
-.threejs-bg--bloom {
-  position: relative;
-
-  --width: min(50vw, 635px);
-  width: var(--width);
-
-  width: 100%;
-  align-self: baseline;
-
-  img {
-    width: min(100%, 635px);
-    height: auto;
-  }
-
-  canvas {
-    cursor: grab;
-  }
-}
-
-.threejs-bg {
-  canvas {
-    position: absolute;
-    top: calc(var(--width) / 100 * -12);
-    left: calc(var(--width) / 100 * 38);
-  }
-}
-
 .hero__content {
   padding: 1rem;
   background-color: rgba(141, 13, 73, 0.8);
 
   width: 100%;
-  height: calc(25vh - 39px);
+  min-height: calc(25vh - 39px);
   position: relative;
 
   display: grid;
