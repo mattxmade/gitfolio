@@ -10,7 +10,10 @@ import {
   format,
 } from "date-fns";
 
-import { App_CommitItem } from "@/app/api/services/github/types";
+import {
+  App_CommitItem,
+  DirectoryContents,
+} from "@/app/api/services/github/types";
 
 // example commit date: "2023-03-17T10:10:38Z";
 
@@ -131,6 +134,7 @@ export const sortCommitsByDate = (commitsToSort: Array<App_CommitItem>) => {
 
 import {
   DirectoryItem,
+  App_DirectoryItem,
   App_SubmoduleItem,
 } from "@/app/api/services/github/types";
 
@@ -146,4 +150,90 @@ export const getLastCommit = (directory: DirectoryItem[]) => {
 
   if (!commit) return;
   return commit as App_CommitItem;
+};
+
+export const processGitDateFormat = (date: string) =>
+  Number(
+    date
+      .replaceAll("-", "")
+      .replaceAll("T", "")
+      .replaceAll(":", "")
+      .slice(0, -1)
+  );
+
+type ExCommit = Partial<App_CommitItem> & {
+  gitDate: number;
+};
+
+export const getLatestCommit = (
+  contents: DirectoryContents,
+  fileStore: App_SubmoduleItem[],
+  recursive?: boolean
+) => {
+  const commits: Array<ExCommit> = [];
+  let lastCommit: App_CommitItem | undefined;
+
+  contents.forEach((submodule) =>
+    submodule.type === "dir"
+      ? recursive &&
+        getLatestCommit(submodule.contents as DirectoryContents, fileStore)
+      : fileStore.push(submodule as App_SubmoduleItem)
+  );
+
+  fileStore &&
+    fileStore.map((file) =>
+      [...new Array(file.commits.length)].map((exCommit: ExCommit, i) => {
+        exCommit = file.commits[i] as ExCommit;
+
+        exCommit.gitDate = processGitDateFormat(file.commits[i].author.date);
+        commits.push(exCommit);
+
+        if (commits.length === file.commits.length) {
+          const sha = commits.sort((a, z) => z.gitDate - a.gitDate)[0].sha;
+          const commit =
+            sha && file.commits.find((commit) => commit.sha === sha);
+          commit && (lastCommit = commit);
+        }
+      })
+    );
+
+  if (lastCommit) return lastCommit as App_CommitItem;
+};
+
+type App_CommitItem_Modifier = App_CommitItem & { gitDate: number };
+
+export const getCurrentDirectoryLastCommit = (dir: DirectoryContents) => {
+  const files: App_SubmoduleItem[] = [];
+  const commits: Array<App_CommitItem_Modifier> = [];
+
+  // map over current directory contents
+  // include only files
+  dir.map((item) => {
+    if (item.type === "file" || item.type === "submodule") {
+      files.push({ ...item } as App_SubmoduleItem);
+    }
+  });
+
+  // map over files, push commit
+  if (files) {
+    files.map((file) =>
+      file.commits.map((commit) =>
+        commits.push(commit as App_CommitItem_Modifier)
+      )
+    );
+  }
+
+  // sort all file commits - most recent first
+  // add gitDate modifier so we can sort commits
+  if (commits) {
+    commits.map(
+      (commit) =>
+        commit.author.date &&
+        (commit.gitDate = processGitDateFormat(commit.author.date))
+    );
+  }
+
+  // sorted commits - most recent commit first
+  // grab first commit item as this is the most recent
+  return commits.sort((a, z) => z.gitDate - a.gitDate)[0] as App_CommitItem;
 };
