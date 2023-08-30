@@ -1,5 +1,5 @@
 {
-  "name": "portfolio",
+  "name": "gitfolio",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mattxmade/portfolio.git"
+    "url": "git+https://github.com/mattxmade/gitfolio.git"
   },
   "keywords": [],
   "author": "mattxmade",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mattxmade/portfolio/issues"
+    "url": "https://github.com/mattxmade/gitfolio/issues"
   },
-  "homepage": "https://github.com/mattxmade/portfolio#readme",
+  "homepage": "https://github.com/mattxmade/gitfolio#readme",
   "dependencies": {
     "@codemirror/lang-css": "^6.2.0",
     "@codemirror/lang-html": "^6.4.5",
