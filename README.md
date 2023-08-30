@@ -57,7 +57,7 @@ Portfolio built with <a href="https://github.com/vercel/next.js"><strong>Next.js
     </tr>
     <tr><td colspan=2></td></tr>
     <tr>
-      <td width="20%"><strong>🔹 Next.js 13 App Router</strong></td>
+      <td width="25%"><strong>🔹 Next.js 13 App Router</strong></td>
       <td>Utilises React Server Components</td>
     </tr>
     <tr><td colspan=2><a href="#features"><img src="docs/table.svg"/></a></td</tr>
