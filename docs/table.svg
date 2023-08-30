@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="370.41669mm"
+   height="0.026458334mm"
+   viewBox="0 0 370.41669 0.026458334"
+   version="1.1"
+   id="svg3553">
+  <defs
+     id="defs3547">
+    <filter
+       id="b"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur2" />
+    </filter>
+    <filter
+       id="a"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur66" />
+    </filter>
+    <filter
+       id="filter3411"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur3409" />
+    </filter>
+    <filter
+       id="filter3415"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur3413" />
+    </filter>
+    <filter
+       id="filter3419"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur3417" />
+    </filter>
+    <filter
+       id="filter3423"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur3421" />
+    </filter>
+    <filter
+       id="filter3427"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur3425" />
+    </filter>
+    <filter
+       id="a-8"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur66-5" />
+    </filter>
+    <filter
+       id="a-8-0"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         result="blur"
+         stdDeviation="5 5"
+         id="feGaussianBlur66-5-4" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata3550">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     style="fill:#ffffff;stroke-width:0.740728;stroke-linejoin:round;paint-order:stroke fill markers"
+     id="rect964"
+     width="370.41669"
+     height="0.026458334"
+     x="0"
+     y="0" />
+</svg>
