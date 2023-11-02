@@ -1,28 +1,30 @@
 import { Fragment } from "react";
-import { processCommitDate } from "@/app/utils/processCommits";
+import { getLatestCommit, processCommitDate } from "@/app/utils/processCommits";
 
 const DirCommitFragment = ({ directory, handleViewFile }: DirCommitProps) => {
   const submodule = directory.contents?.find(
     (item) => item.type === "file" || item.type === "submodule"
   ) as App_SubmoduleItem | null;
 
-  if (!submodule) return <p>Empty Directory</p>;
-
-  const mostRecentCommit = submodule.commits && submodule.commits[0];
+  const mostRecentCommit = getLatestCommit(
+    directory.contents as DirectoryContents,
+    []
+  );
+  const latestCommitDate = mostRecentCommit?.author.date.slice(0, 10);
 
   return (
     <Fragment>
       <p
         className="repo-item--hover repo-item__commit-message"
         onClick={() =>
-          mostRecentCommit.file
-            ? handleViewFile(mostRecentCommit.file, null)
-            : handleViewFile(submodule, null)
+          mostRecentCommit?.files
+            ? handleViewFile(mostRecentCommit.files[0], null)
+            : submodule && handleViewFile(submodule, null)
         }
       >
         {mostRecentCommit?.message}
       </p>
-      <p>{processCommitDate(mostRecentCommit?.author?.date.slice(0, 10))}</p>
+      {latestCommitDate ? <p>{processCommitDate(latestCommitDate)}</p> : null}
     </Fragment>
   );
 };
@@ -34,6 +36,7 @@ import {
   App_SubmoduleItem,
   App_DirectoryItem,
   App_PatchItem,
+  DirectoryContents,
 } from "@/app/api/services/github/types";
 
 type HandleViewFile = (
