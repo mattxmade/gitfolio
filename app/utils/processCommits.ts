@@ -171,7 +171,7 @@ export const getLatestCommit = (
   recursive?: boolean
 ) => {
   const commits: Array<ExCommit> = [];
-  let lastCommit: App_CommitItem | undefined;
+  let lastCommit: Partial<App_CommitItem> | undefined;
 
   contents.forEach((submodule) =>
     submodule.type === "dir"
@@ -188,12 +188,10 @@ export const getLatestCommit = (
         exCommit.gitDate = processGitDateFormat(file.commits[i].author.date);
         commits.push(exCommit);
 
-        if (commits.length === file.commits.length) {
-          const sha = commits.sort((a, z) => z.gitDate - a.gitDate)[0].sha;
-          const commit =
-            sha && file.commits.find((commit) => commit.sha === sha);
-          commit && (lastCommit = commit);
-        }
+        const sha = commits.sort((a, z) => z.gitDate - a.gitDate)[0].sha;
+        const commit = sha && commits.find((commit) => commit.sha === sha);
+
+        commit && (lastCommit = commit);
       })
     );
 
