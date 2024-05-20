@@ -16,7 +16,7 @@ export default function Home() {
 
       <Main>
         {groups.map((group) => (
-          <section>
+          <section key={group.id}>
             <Group
               id={group.id}
               heading={group.heading}
