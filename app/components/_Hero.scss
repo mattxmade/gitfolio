@@ -23,7 +23,7 @@
 
 .splash-screen__hero {
   width: 100%;
-  height: 75vh;
+  height: calc(75vh - 39px);
 
   display: grid;
   align-items: center;
@@ -32,7 +32,7 @@
 
 #hero-img {
   width: 100%;
-  height: 75vh;
+  height: calc(75vh - 39px);
   justify-self: center;
 }
 
@@ -64,27 +64,111 @@
 }
 
 .hero__content {
-  padding: 1rem;
-  background-color: rgba(141, 13, 73, 0.8);
+  justify-self: center;
 
-  width: 100%;
-  min-height: calc(25vh - 39px);
+  padding: 1rem;
+  margin-bottom: 10vh;
   position: relative;
 
-  display: grid;
+  width: 100%;
+  max-width: calc(var(--max-width) / 100 * 75);
+  min-height: 25vh;
 
-  h1 {
-    color: white;
+  display: grid;
+  grid-template-columns: 0.6fr 0.4fr;
+
+  scroll-margin-top: var(--scroll-offset);
+  background-color: rgba(141, 13, 73, 0.4);
+
+  transition: 0.6s;
+
+  @media (max-width: 850px) {
+    gap: 5rem;
+    display: flex;
+    flex-direction: column;
+
+    div:first-child,
+    div:last-child {
+      min-height: calc(25vh - 1rem);
+    }
+  }
+
+  p,
+  a {
+    color: lightblue;
   }
 
   p {
     text-align: left;
-    width: fit-content;
-    color: lightblue;
-
-    margin-left: 2rem;
     padding: 0.2rem;
   }
 
-  margin-bottom: 10vh;
+  a:hover {
+    text-decoration: underline;
+  }
+
+  &__about {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    h1 {
+      color: white;
+    }
+
+    @media (max-width: 470px) {
+      p {
+        width: 83vw;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &__contact {
+    display: grid;
+    align-items: flex-start;
+    position: relative;
+    overflow: hidden;
+
+    > p {
+      font-size: 2rem;
+      padding-left: 1.8rem;
+    }
+
+    svg {
+      fill: rgba(0, 0, 0, 0.24);
+      top: 3.5rem;
+      left: 1rem;
+      width: 40%;
+      height: auto;
+      position: absolute;
+    }
+
+    ul {
+      align-self: center;
+      justify-self: flex-end;
+    }
+
+    li {
+      gap: 1rem;
+      display: flex;
+    }
+
+    li p:first-child {
+      width: 6rem;
+      text-align: right;
+    }
+
+    padding: var(--card-padding);
+    border: var(--content-border);
+    border-radius: var(--content-border-radius);
+    background: linear-gradient(
+      45deg,
+      darkslategrey,
+      rgb(38, 38, 78),
+      darkslategrey
+    );
+  }
 }
