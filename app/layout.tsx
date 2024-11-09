@@ -1,5 +1,8 @@
 import { projectMetadata } from "./data/metadata";
+import { headerContent, footerContent } from "./data/content";
+
 import Nav from "./components/core/Nav";
+import Logo from "./components/icons/Logo";
 import "@/app/index.scss";
 
 type RootLayoutProps = {
@@ -22,10 +25,30 @@ export default function RootLayout(props: RootLayoutProps) {
           <div className="wrapper">
             <div className="overlay">
               <header>
+                <p>{headerContent.subheading}</p>
                 <Nav />
               </header>
               {props.children}
-              <footer></footer>
+              <footer>
+                {footerContent.madeWith ? (
+                  <div className="made-with-container">
+                    <p>{"["} Made with</p>
+                    {footerContent.madeWith.map((item) => (
+                      <Logo key={item.name + " logo"} logo={item.name} />
+                    ))}
+                    <p>{"]"}</p>
+                  </div>
+                ) : null}
+
+                {footerContent.poweredBy ? (
+                  <div className="made-with-container">
+                    <p>Powered by</p>
+                    {footerContent.poweredBy.map((item, i) => (
+                      <Logo key={i} logo={item.name} />
+                    ))}
+                  </div>
+                ) : null}
+              </footer>
             </div>
           </div>
         </div>
