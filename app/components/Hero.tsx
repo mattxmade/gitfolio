@@ -1,10 +1,11 @@
-"use client";
-
 import Image from "next/image";
 import React from "react";
 
-import { about, links, heroContent } from "../data/content";
 import DivMask from "./transitions/elementLibrary";
+import ContactCard from "./widgets/ContactCard";
+import { Cube, Cubes } from "./icons/FontAwesome";
+
+import { about, links, heroContent } from "../data/content";
 
 const Hero = () => {
   return (
@@ -24,12 +25,66 @@ const Hero = () => {
           />
         </div>
 
-        <div className="hero__content">
-          <h1>{about.heading.c}</h1>
+        <div id="contact" className="hero__content">
+          <div className="hero__content__about">
+            <header
+              style={{
+                gap: 0,
+                display: "flex",
+                alignItems: "center",
+                width: "fit-content",
+                padding: 0,
+                backgroundColor: "transparent",
+              }}
+            >
+              <h1>{about.heading.c}</h1>
+              <i
+                style={{
+                  width: "2.5rem",
+                  top: "0.5rem",
+                  left: "1rem",
+                  position: "relative",
+                  fill: "palevioletred",
+                }}
+              >
+                <Cubes />
+              </i>
+            </header>
 
-          {about.info.map((info, i) => (
-            <p key={i}>{info}</p>
-          ))}
+            <ul
+              style={{
+                flex: "auto",
+                display: "grid",
+                padding: "1rem",
+                position: "relative",
+                marginLeft: "1rem",
+              }}
+            >
+              {about.info.map((info, i) => (
+                <li
+                  style={{
+                    gap: "0.5rem",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <i
+                    style={{
+                      width: "1.5rem",
+                      display: "block",
+                      position: "relative",
+                      fill: "palevioletred",
+                    }}
+                  >
+                    <Cube />
+                  </i>
+                  <p key={i}>{info}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <ContactCard className="hero__content__contact" />
         </div>
       </div>
     </DivMask>
