@@ -46,14 +46,16 @@
   }
 }
 
-.modal__description {
+.modal__description,
+.project-card__description {
   justify-self: center;
 
   margin-bottom: 2rem;
   padding: 0 2rem;
 }
 
-.modal__tech-icons-list {
+.modal__tech-icons-list,
+.project-card__tech-icons-list {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,7 +73,8 @@
   }
 }
 
-.modal__icon-mask {
+.modal__icon-mask,
+.project-card__icon-mask {
   top: 0;
   left: 0;
   position: absolute;
