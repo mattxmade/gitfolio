@@ -4,6 +4,7 @@
 @use "./components/Project";
 @use "./components//Git/Repository";
 
+@use "./components/widgets/ContactCard";
 @use "./components/widgets/LoadingSpinner";
 @use "./components/transitions/Transition";
 
@@ -28,19 +29,22 @@
 }
 
 :root {
+  --main-text-color: whitesmoke;
   --card-padding: 1rem;
   --modal-icon-size: 2.8rem;
+  --scroll-offset: 5rem;
+  --max-width: 2000px;
 }
 
 html {
   font-size: 62.5%;
   min-height: 100vh;
+  scroll-behavior: smooth !important; // https://stackoverflow.com/a/71685577
 }
 
 body {
   font-size: 1.6rem;
-  max-width: 2000px;
-
+  // max-width: 2000px;
   background: linear-gradient(45deg, red, blue, red, blue, red);
 }
 
@@ -112,7 +116,7 @@ a,
 a::before,
 a::after {
   color: black;
-  color: lightgrey;
+  color: var(--main-text-color);
   text-decoration: none;
 }
 
@@ -147,6 +151,8 @@ main {
   display: grid;
   justify-content: center;
 
+  scroll-margin-top: var(--scroll-offset);
+
   margin: 1rem 0;
   padding: 0 7rem;
   padding: 0 2rem;
@@ -158,6 +164,7 @@ main {
 
 header {
   color: white;
+  gap: 2rem;
   display: grid;
   padding: 1rem;
   top: 0;
@@ -166,11 +173,21 @@ header {
 
   background-color: black;
 
+  display: flex;
+  justify-content: space-between;
+
+  > p {
+    color: var(--main-text-color);
+    overflow: hidden;
+    word-wrap: break-word;
+  }
+
   nav {
     justify-self: flex-end;
 
     ul {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-around;
 
       li {
@@ -195,17 +212,46 @@ section h2 {
 
 footer {
   width: 100%;
+  padding: var(--card-padding);
+  color: var(--main-text-color);
+  background-color: black;
+
+  gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.made-with-container {
+  display: flex;
+
+  p {
+    margin: 0 0.5rem;
+  }
+
+  svg {
+    fill: var(--main-text-color);
+    width: 8rem;
+    height: auto;
+  }
 }
 
 /*===========
   Utilities
 =============*/
 .tech-icon {
-  font-size: var(--modal-icon-size);
-  width: calc(var(--modal-icon-size) + 0.8rem);
   height: auto;
-
   position: relative;
+
+  &--font-awesome {
+    font-size: var(--modal-icon-size);
+    width: calc(var(--modal-icon-size) + 0.8rem);
+  }
+
+  &--simple-icons {
+    width: var(--modal-icon-size);
+  }
 }
 
 /*=======
@@ -237,4 +283,28 @@ dialog {
   @media (max-width: 1220px) {
     gap: 5rem;
   }
+}
+
+.tech-icon {
+  font-size: var(--modal-icon-size);
+  width: calc(var(--modal-icon-size) + 0.8rem);
+  height: auto;
+
+  position: relative;
+}
+
+/*============
+  Scroll bar
+==============*/
+::-webkit-scrollbar {
+  width: 1.7rem;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(101, 101, 128);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(233, 233, 233, 0.5);
+  border: transparent;
 }
