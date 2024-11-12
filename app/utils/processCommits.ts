@@ -31,7 +31,7 @@ const processDifference = (date: number, type: string): string | undefined => {
       break;
 
     case "month":
-      text = isAgeAboveOne(date) ? `${date} months ago` : "last month";
+      text = isAgeAboveOne(date) ? `${date + 1} months ago` : "last month";
       break;
 
     case "week":
@@ -91,7 +91,7 @@ export const processCommitDate = (date: string) => {
   const yearsDiff = get(differenceInYears);
   if (yearsDiff < 0) return processDifference(yearsDiff, "year");
 
-  const monthsDiff = get(differenceInMonths) - 1; // months are 0 indexed
+  const monthsDiff = get(differenceInMonths);
   if (monthsDiff < 0) return processDifference(monthsDiff, "month");
 
   const weeksDiff = get(differenceInWeeks);
