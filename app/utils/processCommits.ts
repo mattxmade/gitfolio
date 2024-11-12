@@ -91,7 +91,7 @@ export const processCommitDate = (date: string) => {
   const yearsDiff = get(differenceInYears);
   if (yearsDiff < 0) return processDifference(yearsDiff, "year");
 
-  const monthsDiff = get(differenceInMonths);
+  const monthsDiff = get(differenceInMonths) - 1; // months are 0 indexed
   if (monthsDiff < 0) return processDifference(monthsDiff, "month");
 
   const weeksDiff = get(differenceInWeeks);
@@ -99,6 +99,8 @@ export const processCommitDate = (date: string) => {
 
   const daysDiff = get(differenceInDays);
   if (daysDiff < 0) return processDifference(daysDiff, "day");
+
+  if (daysDiff === 0) return "today";
 
   // TODO: Add differenceInSeconds
 };
@@ -176,7 +178,11 @@ export const getLatestCommit = (
   contents.forEach((submodule) =>
     submodule.type === "dir"
       ? recursive &&
-        getLatestCommit(submodule.contents as DirectoryContents, fileStore)
+        getLatestCommit(
+          submodule.contents as DirectoryContents,
+          fileStore,
+          true
+        )
       : fileStore.push(submodule as App_SubmoduleItem)
   );
 
