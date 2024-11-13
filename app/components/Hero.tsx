@@ -62,6 +62,7 @@ const Hero = () => {
             >
               {about.info.map((info, i) => (
                 <li
+                  key={i}
                   style={{
                     gap: "0.5rem",
                     display: "flex",
