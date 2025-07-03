@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
 
-# <a href="#"></a>Gitfolio | <a href="#" target="_blank"> <strong>Live</strong></a>
+# Gitfolio
 
 [commnent]: <> (> ### GitHub API powered Portfolio made with Next.js)
 > ### Developer Portfolio made with Next.js
